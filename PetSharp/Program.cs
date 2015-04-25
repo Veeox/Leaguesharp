@@ -93,27 +93,31 @@ namespace PetSharp
         //Need to fix RAGEEEEE
         private static void OnGameNotify(GameNotifyEventArgs args)
         {
-            if (args.NetworkId != ObjectManager.Player.NetworkId)
+            if (args.NetworkId != Player.NetworkId)
+            {
+                Game.PrintChat(args.NetworkId + " " + Player.NetworkId);
                 return;
+            }
             
             switch (args.EventId) //Check for XP events
             {
                 case GameEventId.OnChampionDoubleKill:
-                    Game.PrintChat("Yay! Double kill!");
+                    CurXP += (CurXP + (MaxXP / 80));
                     break;
                 case GameEventId.OnChampionPentaKill:
-                    Game.PrintChat("YAY pent kill!");
+                    CurXP += (CurXP + (MaxXP / 15));
                     break;
                 case GameEventId.OnChampionQuadraKill:
-                    Game.PrintChat("YAY quad kill");
+                    CurXP += (CurXP + (MaxXP / 45));
                     break;
                 case GameEventId.OnChampionTripleKill:
-                    Game.PrintChat("YAY trip kill!!");
+                    CurXP += (CurXP + (MaxXP / 75));
                     break;
                 case GameEventId.OnAce:
-                    Game.PrintChat("YAY ACE!");
+                    CurXP += (CurXP + (MaxXP / 80));
                     break;
-                case GameEventId.OnChampionKill:
+                case GameEventId.OnChampionDie:
+                    CurXP += (CurXP + (MaxXP / 75));
                     Game.PrintChat("Yay FB!");
                     break;
 
