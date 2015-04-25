@@ -90,14 +90,12 @@ namespace PetSharp
             }
         }
 
+        //Need to fix RAGEEEEE
         private static void OnGameNotify(GameNotifyEventArgs args)
         {
             if (args.NetworkId != ObjectManager.Player.NetworkId)
-            {
-                // not my hero
                 return;
-            }
-
+            
             switch (args.EventId) //Check for XP events
             {
                 case GameEventId.OnChampionDoubleKill:
@@ -115,39 +113,37 @@ namespace PetSharp
                 case GameEventId.OnAce:
                     Game.PrintChat("YAY ACE!");
                     break;
-                case GameEventId.OnFirstBlood:
+                case GameEventId.OnChampionKill:
                     Game.PrintChat("Yay FB!");
                     break;
-                
+
                 case GameEventId.OnKillDragon:
                     foreach (var i in ObjectManager.Get<Obj_AI_Hero>())
                     {
-                        if (i.Team == Player.Team)
-                            KillDrag();
+                        if (i.IsAlly)
+                        {
                             Game.PrintChat("YAY DRAGON DEAD!");
-                        if (i.Team != Player.Team)
+                        }
+                        if (i.IsEnemy)
                             return;
                     }
+
                     break;
                 case GameEventId.OnKillWorm:
                     foreach (var i in ObjectManager.Get<Obj_AI_Hero>())
                     {
-                        if (i.Team == Player.Team)
+                        if (i.IsAlly)
+                        {
                             KillBaroon();
-                        Game.PrintChat("YAY BAROON DEAD!");
-                        if (i.Team != Player.Team)
+                            Game.PrintChat("YAY BAROON DEAD!");
+                        }
+                        if (i.IsEnemy)
                             return;
                     }
                     break;
                 case GameEventId.OnKillWard:
-                    foreach (var i in ObjectManager.Get<Obj_AI_Hero>())
-                    {
-                        if (i.Team == Player.Team)
-                            KillWard();
-                        Game.PrintChat("Killed a ward!");
-                        if (i.Team != Player.Team)
-                            return;
-                    }
+                    KillWard();
+                    Game.PrintChat("Killed a ward!");
                     break;
                 case GameEventId.OnQuit:
                     ConvertInt(Lvl, CurXP, MaxXP);
@@ -302,12 +298,13 @@ namespace PetSharp
 
         private static void WinGame()
         {
-            var nexus = ObjectManager.Get<Obj_HQ>().Find(n => n.Health < 1);
+            var nexus = ObjectManager.Get<Obj_HQ>().Find(n => n.Health < 100);
 
             if (nexus.IsEnemy)
             {
                 CurXP += (CurXP + (MaxXP / 10));
                 ConvertInt(Lvl, CurXP, MaxXP);
+                Game.PrintChat("WON!");
             }
             else
             {
