@@ -19,10 +19,10 @@ namespace PetSharp
 {
     class Program
     {
-        private static int CurXP;
-        private static int MaxXP;
-        private static int Lvl;
-        private static string PetName;
+        public static int CurXP;
+        public static int MaxXP;
+        public static int Lvl;
+        public static string PetName;
 
         public static string FileName;
 
@@ -30,7 +30,7 @@ namespace PetSharp
         private static Obj_AI_Minion Dragon { get; set; }
 
         public static Menu Menu;
-        public const string Ver = "0.0.1";
+        public const string Ver = "0.0.2";
 
         private static Obj_AI_Hero Player { get { return ObjectManager.Player; } }
 
@@ -38,12 +38,12 @@ namespace PetSharp
         static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += OnLoad;
-            CustomEvents.Game.OnGameEnd += OnEnd;
-            Game.OnNotify += OnGameNotify;
+            
         }
 
         private static void OnLoad(EventArgs args)
         {
+            InitEvents(); 
 
             //Grab data from text file else create it
             FileName = "PetSharp.txt";
@@ -71,22 +71,44 @@ namespace PetSharp
             Menu.AddToMainMenu();
 
             //Prints
-            Game.PrintChat("PetSharp v" + Ver + " by Veeox Loaded!");
+            //ShowNotification("PetSharp v" + Ver + " by Veeox Loaded!", 3000);
+            
             
         }
 
-        private static void Game_OnGameUpdate(EventArgs args)
+        static void Drawing_OnDraw(EventArgs args)
+        {
+            var xpos = 1730;
+            var ypos = 700;
+
+            Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "Pet Name " + PetName);
+            Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Level " + (int)Lvl);
+            Drawing.DrawText(xpos, ypos + 40, System.Drawing.Color.LightSkyBlue, "XP " + (int)CurXP + "/" + (int)MaxXP);
+        }
+
+        private static void OnUpdate(EventArgs args)
         {
             
             //Check if enabled
-            if (!Menu.Item("track").IsActive())
+            if (!Menu.Item("track").GetValue<bool>())
             {
                 return;
             }
             else
             {
                 GainXP();
+                
             }
+            
+
+        }
+
+        private static void InitEvents()
+        {
+            Game.OnUpdate += OnUpdate;
+            CustomEvents.Game.OnGameEnd += OnEnd;
+            Game.OnNotify += OnGameNotify;
+            Drawing.OnDraw += Drawing_OnDraw;
         }
 
         //Need to fix RAGEEEEE
@@ -96,9 +118,10 @@ namespace PetSharp
             //{
             //    return;
             //}
-
+            var killer = args.NetworkId;
             switch (args.EventId) //Check for XP events
             {
+                    
                 case GameEventId.OnChampionDoubleKill:
                     if (ObjectManager.Player.IsMe)
                     {
@@ -118,7 +141,7 @@ namespace PetSharp
                     }
                     break;
                 case GameEventId.OnChampionTripleKill:
-                    if (ObjectManager.Player.IsMe)
+                    if (ObjectManager.Player.NetworkId == args.NetworkId)
                     {
                         CurXP += (CurXP + (MaxXP / 75));
                     }
@@ -126,12 +149,22 @@ namespace PetSharp
                 case GameEventId.OnAce:
                     CurXP += (CurXP + (MaxXP / 80));
                     break;
-                case GameEventId.OnChampionKill:
-                    if (ObjectManager.Player.IsMe)
+                case GameEventId.OnChampionDie:
+                    
+                    if (killer == Player.NetworkId)
                     {
                         CurXP += (CurXP + (MaxXP / 75));
                         Console.WriteLine("Yay FB!");
                         Console.WriteLine(CurXP);
+                    }
+                    break;
+                case GameEventId.OnDie:
+
+                    if (killer == Player.NetworkId)
+                    {
+                        CurXP += (CurXP + (MaxXP / 75));
+                        Console.WriteLine("Yay FB!");
+                        Console.WriteLine(CurXP + "/" + MaxXP);
                     }
                     break;
 
@@ -140,7 +173,7 @@ namespace PetSharp
                     {
                         if (i.IsAlly)
                         {
-                            Game.PrintChat("YAY DRAGON DEAD!");
+                            Console.WriteLine("YAY DRAGON DEAD!");
                         }
                         if (i.IsEnemy)
                             return;
@@ -153,7 +186,7 @@ namespace PetSharp
                         if (i.IsAlly)
                         {
                             KillBaroon();
-                            Game.PrintChat("YAY BAROON DEAD!");
+                            Console.WriteLine("YAY BAROON DEAD!");
                         }
                         if (i.IsEnemy)
                             return;
@@ -163,7 +196,7 @@ namespace PetSharp
                     if (ObjectManager.Player.IsMe)
                     {
                         KillWard();
-                        Game.PrintChat("Killed a ward!");
+                        Console.WriteLine("Killed a ward!");
                     }
                     break;
                 case GameEventId.OnQuit:
@@ -187,7 +220,7 @@ namespace PetSharp
         }
 
         //Convert Int
-        public static void ConvertInt(int lvl, int curxp, int maxxp) 
+        public static void ConvertInt(int lvl, int currxp, int maxxp) 
         {
             string level = Lvl.ToString();
             string currentXP = CurXP.ToString();
@@ -196,11 +229,11 @@ namespace PetSharp
         }
         
         //Convert String
-        public static void ConvertString(string lvl, string curxp, string maxxp)
+        public static void ConvertString(string lvl, string currxp, string maxxp)
         {
             
             int level = int.Parse(lvl);
-            int currentXP = int.Parse(curxp);
+            int currentXP = int.Parse(currxp);
             int maximumXP = int.Parse(maxxp);
 
             Lvl = level;
@@ -245,14 +278,14 @@ namespace PetSharp
         }
 
         //Used to save data
-        public static void SaveData(string lvl, string curxp, string maxxp) 
+        public static void SaveData(string lvl, string currxp, string maxxp) 
         {
             File.WriteAllText(Config.AppDataDirectory + @"\PetSharp\" + FileName, PetName + "\n");
             using (var file = new StreamWriter(Config.AppDataDirectory + @"\PetSharp\" + FileName, true))
             {
                 //file.WriteLine(System.Environment.NewLine);
                 file.WriteLine(lvl);
-                file.WriteLine(curxp);
+                file.WriteLine(currxp);
                 file.WriteLine(maxxp);
                 file.Close();
             }
@@ -300,8 +333,20 @@ namespace PetSharp
         //    Directory.Delete(path);
         //}
 
+        
+        private static void GainXP()
+        {
+            LevelUp();
+            WinGame();
+            EndScore();
+            
+
+        }
+        
+
         private static void LevelUp()
         {
+            //Console.WriteLine("stuff");
             if (CurXP >= MaxXP)
             {
                 CurXP = (CurXP - MaxXP);
@@ -309,23 +354,20 @@ namespace PetSharp
             }
         }
 
-        private static void GainXP()
-        {
-            LevelUp();
-            WinGame();
-            EndScore();
-
-        }
-
         private static void WinGame()
         {
             var nexus = ObjectManager.Get<Obj_HQ>().Find(n => n.Health < 100);
+
+            if (nexus == null)
+            {
+                return;
+            }
 
             if (nexus.IsEnemy)
             {
                 CurXP += (CurXP + (MaxXP / 10));
                 ConvertInt(Lvl, CurXP, MaxXP);
-                Game.PrintChat("WON!");
+                Console.WriteLine("WON!");
             }
             else
             {
@@ -350,8 +392,10 @@ namespace PetSharp
 
         private static void EndScore()
         {
-
+            return;
         }
+
+        
         
     }
 }
