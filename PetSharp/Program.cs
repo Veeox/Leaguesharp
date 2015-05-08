@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 using LeagueSharp;
 using LeagueSharp.Common;
@@ -31,10 +32,7 @@ namespace PetSharp
         public static Menu Menu;
         public const string Ver = "0.0.1";
 
-        public static Obj_AI_Hero Player
-        {
-            get { return ObjectManager.Player; }
-        }
+        private static Obj_AI_Hero Player { get { return ObjectManager.Player; } }
 
 
         static void Main(string[] args)
@@ -46,6 +44,7 @@ namespace PetSharp
 
         private static void OnLoad(EventArgs args)
         {
+
             //Grab data from text file else create it
             FileName = "PetSharp.txt";
             if (!Directory.Exists(Config.AppDataDirectory + @"\PetSharp"))
@@ -93,32 +92,47 @@ namespace PetSharp
         //Need to fix RAGEEEEE
         private static void OnGameNotify(GameNotifyEventArgs args)
         {
-            if (args.NetworkId != Player.NetworkId)
-            {
-                Game.PrintChat(args.NetworkId + " " + Player.NetworkId);
-                return;
-            }
-            
+            //if (args.NetworkId != Player.NetworkId)
+            //{
+            //    return;
+            //}
+
             switch (args.EventId) //Check for XP events
             {
                 case GameEventId.OnChampionDoubleKill:
-                    CurXP += (CurXP + (MaxXP / 80));
+                    if (ObjectManager.Player.IsMe)
+                    {
+                        CurXP += (CurXP + (MaxXP / 80));
+                    }
                     break;
                 case GameEventId.OnChampionPentaKill:
-                    CurXP += (CurXP + (MaxXP / 15));
+                    if (ObjectManager.Player.IsMe)
+                    {
+                        CurXP += (CurXP + (MaxXP / 15));
+                    }
                     break;
                 case GameEventId.OnChampionQuadraKill:
-                    CurXP += (CurXP + (MaxXP / 45));
+                    if (ObjectManager.Player.IsMe)
+                    {
+                        CurXP += (CurXP + (MaxXP / 45));
+                    }
                     break;
                 case GameEventId.OnChampionTripleKill:
-                    CurXP += (CurXP + (MaxXP / 75));
+                    if (ObjectManager.Player.IsMe)
+                    {
+                        CurXP += (CurXP + (MaxXP / 75));
+                    }
                     break;
                 case GameEventId.OnAce:
                     CurXP += (CurXP + (MaxXP / 80));
                     break;
-                case GameEventId.OnChampionDie:
-                    CurXP += (CurXP + (MaxXP / 75));
-                    Game.PrintChat("Yay FB!");
+                case GameEventId.OnChampionKill:
+                    if (ObjectManager.Player.IsMe)
+                    {
+                        CurXP += (CurXP + (MaxXP / 75));
+                        Console.WriteLine("Yay FB!");
+                        Console.WriteLine(CurXP);
+                    }
                     break;
 
                 case GameEventId.OnKillDragon:
@@ -146,8 +160,11 @@ namespace PetSharp
                     }
                     break;
                 case GameEventId.OnKillWard:
-                    KillWard();
-                    Game.PrintChat("Killed a ward!");
+                    if (ObjectManager.Player.IsMe)
+                    {
+                        KillWard();
+                        Game.PrintChat("Killed a ward!");
+                    }
                     break;
                 case GameEventId.OnQuit:
                     ConvertInt(Lvl, CurXP, MaxXP);
