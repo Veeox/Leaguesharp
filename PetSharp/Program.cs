@@ -55,7 +55,7 @@ namespace PetSharp
 
         private static void OnLoad(EventArgs args)
         {
-            InitEvents(); 
+            InitEvents();
 
             //Grab data from text file else create it
             FileName = "PetSharp.txt";
@@ -192,14 +192,14 @@ namespace PetSharp
                     }
                     break;
 
-                case GameEventId.OnKillDragon:
-                    foreach (var i in ObjectManager.Get<Obj_AI_Hero>())
+                case GameEventId.OnKillDragon: //HOW THE FUCK DO I WORK OUT WHO KILLED DRAG RAGE
+                    foreach (var i in HeroManager.Allies)
                     {
-                        if (i.IsAlly)
+                        if (args.NetworkId == i.NetworkId)
                         {
                             Console.WriteLine("YAY DRAGON DEAD!");
                         }
-                        if (i.IsEnemy)
+                        else
                             return;
                     }
 
