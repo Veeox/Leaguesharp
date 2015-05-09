@@ -356,6 +356,7 @@ namespace PetSharp
             {
                 CurXP = (CurXP - MaxXP);
                 MaxXP = (MaxXP * 2);
+                Lvl++;
             }
         }
 
