@@ -15,6 +15,18 @@ using SharpDX;
 
 #endregion
 
+#region ToDo
+
+    //Cash system
+    //Shop system
+    //Food (buffs etc for cash)
+    //Event System fixes and testing
+    //Battles?
+    //Test XP gains
+    //Save pet info to server
+
+#endregion
+
 namespace PetSharp
 {
     class Program
@@ -61,11 +73,14 @@ namespace PetSharp
             }
 
             // Menu
-            Menu = new Menu("PetSharp", "petsharp", true);
-            Menu.AddSubMenu(new Menu("Pet Info", "petinfo"));
-            Menu.SubMenu("petinfo").AddItem(new MenuItem("petname", "Pet Name: " + PetName));
-            Menu.SubMenu("petinfo").AddItem(new MenuItem("petlvl", "Level: " + Lvl));
-            Menu.SubMenu("petinfo").AddItem(new MenuItem("petxp", "XP: " + CurXP + "/" + MaxXP));
+            Menu = new Menu("PetSharp v." + Ver, "petsharp", true);
+
+            Menu.AddSubMenu(new Menu("PetSharp Shop", "shop"));
+            Menu.SubMenu("shop").AddItem(new MenuItem("bfood", "Buff Food"));
+            Menu.SubMenu("shop").AddItem(new MenuItem("food1", "Buy Food 1").SetValue(false));
+            Menu.SubMenu("shop").AddItem(new MenuItem("food2", "Buy Food 2").SetValue(false));
+            Menu.SubMenu("shop").AddItem(new MenuItem("food3", "Buy Food 3").SetValue(false));
+
             Menu.AddItem(new MenuItem("track", "Track Game").SetValue(true));
 
             Menu.AddToMainMenu();
@@ -78,12 +93,12 @@ namespace PetSharp
 
         static void Drawing_OnDraw(EventArgs args)
         {
-            var xpos = 1730;
-            var ypos = 700;
-
-            Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "Pet Name " + PetName);
-            Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Level " + (int)Lvl);
-            Drawing.DrawText(xpos, ypos + 40, System.Drawing.Color.LightSkyBlue, "XP " + (int)CurXP + "/" + (int)MaxXP);
+            var xpos = 1660;
+            var ypos = 680;
+            Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp v" + Ver + " by Veeox");
+            Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Pet Name: " + PetName);
+            Drawing.DrawText(xpos, ypos + 40, System.Drawing.Color.LightSkyBlue, "Level: " + (int)Lvl);
+            Drawing.DrawText(xpos, ypos + 60, System.Drawing.Color.LightSkyBlue, "XP: " + (int)CurXP + "/" + (int)MaxXP);
         }
 
         private static void OnUpdate(EventArgs args)
@@ -97,7 +112,7 @@ namespace PetSharp
             else
             {
                 GainXP();
-                
+                ShopBuy();
             }
             
 
@@ -119,6 +134,7 @@ namespace PetSharp
             //    return;
             //}
             var killer = args.NetworkId;
+
             switch (args.EventId) //Check for XP events
             {
                     
@@ -147,7 +163,15 @@ namespace PetSharp
                     }
                     break;
                 case GameEventId.OnAce:
-                    CurXP += (CurXP + (MaxXP / 80));
+                    foreach (var i in ObjectManager.Get<Obj_AI_Hero>())
+                    {
+                        if (i.IsAlly)
+                        {
+                            CurXP += (CurXP + (MaxXP / 80));
+                        }
+                        if (i.IsEnemy)
+                            return;
+                    }
                     break;
                 case GameEventId.OnChampionDie:
                     
@@ -290,60 +314,41 @@ namespace PetSharp
                 file.Close();
             }
         }
-
-        ////Used to delete old save
-        //public static void DeleteSave(string path)
-        //{
-        //    DeleteSave(path, false);
-        //}
-
-        //public static void DeleteSave(string path, bool recursive)
-        //{
-        //    // Delete all files and sub-folders?
-        //    if (recursive)
-        //    {
-        //        // Yep... Let's do this
-        //        var subfolders = Directory.GetDirectories(path);
-        //        foreach (var s in subfolders)
-        //        {
-        //            DeleteSave(s, recursive);
-        //        }
-        //    }
-
-        //    // Get all files of the folder
-        //    var files = Directory.GetFiles(path);
-        //    foreach (var f in files)
-        //    {
-        //        // Get the attributes of the file
-        //        var attr = File.GetAttributes(f);
-
-        //        // Is this file marked as 'read-only'?
-        //        if ((attr & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-        //        {
-        //            // Yes... Remove the 'read-only' attribute, then
-        //            File.SetAttributes(f, attr ^ FileAttributes.ReadOnly);
-        //        }
-
-        //        // Delete the file
-        //        File.Delete(f);
-        //    }
-
-        //    // When we get here, all the files of the folder were
-        //    // already deleted, so we just delete the empty folder
-        //    Directory.Delete(path);
-        //}
-
         
         private static void GainXP()
         {
             LevelUp();
             WinGame();
             EndScore();
-            
+        }
 
+        private static void ShopBuy()
+        {
+            if (!Menu.Item("food1").GetValue<bool>() && (!Menu.Item("food2").GetValue<bool>() && (!Menu.Item("food3").GetValue<bool>())))
+            {
+                return;
+            }
+
+            if (Menu.Item("food1").GetValue<bool>())
+            {
+                Console.WriteLine("Buy food 1");
+                Menu.Item("food1").SetValue(false);
+            }
+
+            if (Menu.Item("food2").GetValue<bool>())
+            {
+                Console.WriteLine("Buy food 2");
+                Menu.Item("food2").SetValue(false);
+            }
+
+            if (Menu.Item("food3").GetValue<bool>())
+            {
+                Console.WriteLine("Buy food 3");
+                Menu.Item("food3").SetValue(false);
+            }
+        
         }
         
-
         private static void LevelUp()
         {
             //Console.WriteLine("stuff");
@@ -395,7 +400,5 @@ namespace PetSharp
             return;
         }
 
-        
-        
     }
 }
