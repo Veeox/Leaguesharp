@@ -36,6 +36,12 @@ namespace PetSharp
         public static int Lvl;
         public static string PetName;
 
+        //Drag and Baroon Stuff
+        private static string DragonBuff = "s5test_dragonslayerbuff";
+        private static string BaroonBuff = "exaltedwithbaronnashor";
+        private static int AllyD;
+        private static int AllyB;
+
         public static string FileName;
 
         private static Obj_AI_Minion Baron { get; set; }
@@ -111,6 +117,8 @@ namespace PetSharp
             }
             else
             {
+                DragonCheck();
+                BaroonCheck();
                 GainXP();
                 ShopBuy();
             }
@@ -226,6 +234,40 @@ namespace PetSharp
                 case GameEventId.OnQuit:
                     ConvertInt(Lvl, CurXP, MaxXP);
                     break;
+            }
+        }
+
+        private static void DragonCheck()
+        {
+            var allyDbuff = Player.Buffs.Find(x => x.Name == DragonBuff);
+
+            // ally kill dragon
+            if (allyDbuff != null && allyDbuff.Count > AllyD)
+            {
+               AllyD = allyDbuff.Count;
+               KillDrag();
+            }
+            // dragon 5 expiry
+            if (allyDbuff != null && allyDbuff.Count < AllyD)
+            {
+                AllyD = allyDbuff.Count;
+            }
+        }
+
+        private static void BaroonCheck()
+        {
+            var allyBbuff = Player.Buffs.Find(x => x.Name == BaroonBuff);
+
+            // ally kill baroon
+            if (allyBbuff != null && allyBbuff.Count > AllyB)
+            {
+                AllyD = allyBbuff.Count;
+                KillBaroon();
+            }
+            // baroon expiry
+            if (allyBbuff != null && allyBbuff.Count < AllyB)
+            {
+                AllyB = allyBbuff.Count;
             }
         }
 
@@ -384,11 +426,13 @@ namespace PetSharp
         private static void KillDrag()
         {
             CurXP += (CurXP + (MaxXP / 30));
+            Console.WriteLine("Drag Killed");
         }
 
         private static void KillBaroon()
         {
             CurXP += (CurXP + (MaxXP / 50));
+            Console.WriteLine("Baroon Killed");
         }
 
         private static void KillWard()
