@@ -17,9 +17,12 @@ using SharpDX;
 
 #region ToDo
 
+    //Name generator
+    //Pet Sprite
     //Cash system
     //Shop system
-    //Food (buffs etc for cash)
+        //Buff Food
+        //Needs moar ideas pls
     //Event System fixes and testing
     //Battles?
     //Test XP gains
@@ -81,12 +84,18 @@ namespace PetSharp
             // Menu
             Menu = new Menu("PetSharp v." + Ver, "petsharp", true);
 
+            //shop menu
             Menu.AddSubMenu(new Menu("PetSharp Shop", "shop"));
             Menu.SubMenu("shop").AddItem(new MenuItem("bfood", "Buff Food"));
             Menu.SubMenu("shop").AddItem(new MenuItem("food1", "Buy Food 1").SetValue(false));
             Menu.SubMenu("shop").AddItem(new MenuItem("food2", "Buy Food 2").SetValue(false));
             Menu.SubMenu("shop").AddItem(new MenuItem("food3", "Buy Food 3").SetValue(false));
 
+            //Draw menu
+            Menu.AddItem(new MenuItem("draw", "Drawings"));
+            Menu.SubMenu("draw").AddItem(new MenuItem("Drawstats", "Draw Stats").SetValue(true));
+
+            //Track menu
             Menu.AddItem(new MenuItem("track", "Track Game").SetValue(true));
 
             Menu.AddToMainMenu();
@@ -99,12 +108,15 @@ namespace PetSharp
 
         static void Drawing_OnDraw(EventArgs args)
         {
-            var xpos = 1660;
-            var ypos = 680;
-            Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp v" + Ver + " by Veeox");
-            Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Pet Name: " + PetName);
-            Drawing.DrawText(xpos, ypos + 40, System.Drawing.Color.LightSkyBlue, "Level: " + (int)Lvl);
-            Drawing.DrawText(xpos, ypos + 60, System.Drawing.Color.LightSkyBlue, "XP: " + (int)CurXP + "/" + (int)MaxXP);
+            if (Menu.Item("drawstats").GetValue<bool>())
+            {
+                var xpos = 1660;
+                var ypos = 680;
+                Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp v" + Ver + " by Veeox");
+                Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Pet Name: " + PetName);
+                Drawing.DrawText(xpos, ypos + 40, System.Drawing.Color.LightSkyBlue, "Level: " + (int)Lvl);
+                Drawing.DrawText(xpos, ypos + 60, System.Drawing.Color.LightSkyBlue, "XP: " + (int)CurXP + "/" + (int)MaxXP);
+            }
         }
 
         private static void OnUpdate(EventArgs args)
@@ -182,7 +194,7 @@ namespace PetSharp
                     if (killer == Player.NetworkId)
                     {
                         CurXP += MaxXP / 75;
-                        Console.WriteLine("Yay FB!");
+                        Console.WriteLine("Yay a Kill!");
                         Console.WriteLine(CurXP);
                     }
                     break;
@@ -362,7 +374,6 @@ namespace PetSharp
         
         private static void LevelUp()
         {
-            //Console.WriteLine("stuff");
             if (CurXP >= MaxXP)
             {
                 CurXP = (CurXP - MaxXP);
