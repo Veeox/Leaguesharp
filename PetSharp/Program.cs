@@ -137,10 +137,6 @@ namespace PetSharp
         //Need to fix RAGEEEEE
         private static void OnGameNotify(GameNotifyEventArgs args)
         {
-            //if (args.NetworkId != Player.NetworkId)
-            //{
-            //    return;
-            //}
             var killer = args.NetworkId;
 
             switch (args.EventId) //Check for XP events
@@ -149,25 +145,25 @@ namespace PetSharp
                 case GameEventId.OnChampionDoubleKill:
                     if (ObjectManager.Player.IsMe)
                     {
-                        CurXP += (CurXP + (MaxXP / 80));
+                        CurXP += MaxXP / 80;
                     }
                     break;
                 case GameEventId.OnChampionPentaKill:
                     if (ObjectManager.Player.IsMe)
                     {
-                        CurXP += (CurXP + (MaxXP / 15));
+                        CurXP += MaxXP / 15;
                     }
                     break;
                 case GameEventId.OnChampionQuadraKill:
                     if (ObjectManager.Player.IsMe)
                     {
-                        CurXP += (CurXP + (MaxXP / 45));
+                        CurXP += MaxXP / 45;
                     }
                     break;
                 case GameEventId.OnChampionTripleKill:
                     if (ObjectManager.Player.NetworkId == args.NetworkId)
                     {
-                        CurXP += (CurXP + (MaxXP / 75));
+                        CurXP += MaxXP / 75;
                     }
                     break;
                 case GameEventId.OnAce:
@@ -175,7 +171,7 @@ namespace PetSharp
                     {
                         if (i.IsAlly)
                         {
-                            CurXP += (CurXP + (MaxXP / 80));
+                            CurXP += MaxXP / 80;
                         }
                         if (i.IsEnemy)
                             return;
@@ -185,7 +181,7 @@ namespace PetSharp
                     
                     if (killer == Player.NetworkId)
                     {
-                        CurXP += (CurXP + (MaxXP / 75));
+                        CurXP += MaxXP / 75;
                         Console.WriteLine("Yay FB!");
                         Console.WriteLine(CurXP);
                     }
@@ -194,36 +190,12 @@ namespace PetSharp
 
                     if (killer == Player.NetworkId)
                     {
-                        CurXP += (CurXP + (MaxXP / 75));
+                        CurXP += MaxXP / 75;
                         Console.WriteLine("Yay FB!");
                         Console.WriteLine(CurXP + "/" + MaxXP);
                     }
                     break;
 
-                case GameEventId.OnKillDragon: //HOW THE FUCK DO I WORK OUT WHO KILLED DRAG RAGE
-                    foreach (var i in HeroManager.Allies)
-                    {
-                        if (args.NetworkId == i.NetworkId)
-                        {
-                            Console.WriteLine("YAY DRAGON DEAD!");
-                        }
-                        else
-                            return;
-                    }
-
-                    break;
-                case GameEventId.OnKillWorm:
-                    foreach (var i in ObjectManager.Get<Obj_AI_Hero>())
-                    {
-                        if (i.IsAlly)
-                        {
-                            KillBaroon();
-                            Console.WriteLine("YAY BAROON DEAD!");
-                        }
-                        if (i.IsEnemy)
-                            return;
-                    }
-                    break;
                 case GameEventId.OnKillWard:
                     if (ObjectManager.Player.IsMe)
                     {
@@ -338,9 +310,7 @@ namespace PetSharp
                 }
                 ConvertString(LvlStr, CurXPStr, MaxXPStr);
             }
-
-           // if (LvlStr != null && CurXPStr != null && MaxXPStr != null)
-                
+                            
         }
 
         //Used to save data
@@ -349,7 +319,6 @@ namespace PetSharp
             File.WriteAllText(Config.AppDataDirectory + @"\PetSharp\" + FileName, PetName + "\n");
             using (var file = new StreamWriter(Config.AppDataDirectory + @"\PetSharp\" + FileName, true))
             {
-                //file.WriteLine(System.Environment.NewLine);
                 file.WriteLine(lvl);
                 file.WriteLine(currxp);
                 file.WriteLine(maxxp);
@@ -413,7 +382,7 @@ namespace PetSharp
 
             if (nexus.IsEnemy)
             {
-                CurXP += (CurXP + (MaxXP / 10));
+                CurXP += MaxXP / 10;
                 ConvertInt(Lvl, CurXP, MaxXP);
                 Console.WriteLine("WON!");
             }
@@ -425,19 +394,19 @@ namespace PetSharp
 
         private static void KillDrag()
         {
-            CurXP += (CurXP + (MaxXP / 30));
+            CurXP += MaxXP / 30;
             Console.WriteLine("Drag Killed");
         }
 
         private static void KillBaroon()
         {
-            CurXP += (CurXP + (MaxXP / 50));
+            CurXP += MaxXP / 50;
             Console.WriteLine("Baroon Killed");
         }
 
         private static void KillWard()
         {
-            CurXP += (CurXP + (MaxXP / 100));
+            CurXP += MaxXP / 100;
         }
 
         private static void EndScore()
