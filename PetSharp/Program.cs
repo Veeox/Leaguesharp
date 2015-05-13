@@ -48,7 +48,7 @@ namespace PetSharp
         private static Obj_AI_Minion Dragon { get; set; }
 
         public static Menu Menu;
-        public const string Ver = "0.0.2";
+        public const string Ver = "0.0.4";
 
         private static Obj_AI_Hero Player { get { return ObjectManager.Player; } }
 
@@ -373,22 +373,28 @@ namespace PetSharp
 
         private static void WinGame()
         {
-            var nexus = ObjectManager.Get<Obj_HQ>().Find(n => n.Health < 100);
+            var DoOnce = false;
+            var nexus = ObjectManager.Get<Obj_HQ>().Find(n => n.Health < 1);
 
             if (nexus == null)
             {
                 return;
             }
 
-            if (nexus.IsEnemy)
+            if (!DoOnce)
             {
-                CurXP += MaxXP / 10;
-                ConvertInt(Lvl, CurXP, MaxXP);
-                Console.WriteLine("WON!");
-            }
-            else
-            {
-                ConvertInt(Lvl, CurXP, MaxXP);
+                if (nexus.IsEnemy)
+                {
+                    CurXP += MaxXP / 10;
+                    ConvertInt(Lvl, CurXP, MaxXP);
+                    Console.WriteLine("WON!");
+                    DoOnce = true;
+                }
+                else
+                {
+                    ConvertInt(Lvl, CurXP, MaxXP);
+                    DoOnce = true;
+                }
             }
         }
 
