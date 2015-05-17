@@ -151,7 +151,7 @@ namespace PetSharp
             Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Pet Name: " + PetName);
             Drawing.DrawText(xpos, ypos + 40, System.Drawing.Color.LightSkyBlue, "Level: " + (int)Lvl);
             Drawing.DrawText(xpos, ypos + 60, System.Drawing.Color.LightSkyBlue, "XP: " + (int)CurXP + "/" + (int)MaxXP);
-            Drawing.DrawText(xpos, ypos + 80, System.Drawing.Color.LightSkyBlue, "Cash: $" + (int)CashBalance);
+            Drawing.DrawText(xpos, ypos + 80, System.Drawing.Color.LightSkyBlue, "PetBux: $" + (int)CashBalance);
         }
 
         private static void OnUpdate(EventArgs args)
