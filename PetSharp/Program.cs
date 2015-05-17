@@ -56,7 +56,7 @@ namespace PetSharp
         private static Obj_AI_Minion Dragon { get; set; }
 
         public static Menu Menu;
-        public const string Ver = "0.0.1.0";
+        public const string Ver = "0.0.1.5";
 
         private static System.Drawing.Color NotificationColor = System.Drawing.Color.FromArgb(0, 255, 0);
 
