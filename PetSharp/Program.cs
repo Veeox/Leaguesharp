@@ -17,7 +17,7 @@ using SharpDX;
 
 #region ToDo
 
-    //Name generator
+    //Name generator - #Done! (might be inefficient)
     //Pet Sprite
     //Cash system
     //Shop system
