@@ -111,10 +111,12 @@ namespace PetSharp
             Menu.AddSubMenu(new Menu("Misc", "misc"));
             Menu.SubMenu("misc").AddItem(new MenuItem("track", "Track Game").SetValue(true));
             Menu.SubMenu("misc").AddItem(new MenuItem("new", "New Pet (Start Over)").SetValue(false));
-            Menu.SubMenu("misc").AddItem(new MenuItem("credits", "Credits"));
-            Menu.SubMenu("misc").AddItem(new MenuItem("Veeox", "Veeox"));
-            Menu.SubMenu("misc").AddItem(new MenuItem("TehBlaxxor", "TehBlaxxor"));
-            Menu.SubMenu("misc").AddItem(new MenuItem("zvodd", "zvodd"));
+
+            //Credits menu
+            Menu.AddSubMenu(new Menu("Credits", "credits"));
+            Menu.SubMenu("credits").AddItem(new MenuItem("Veeox", "Veeox"));
+            Menu.SubMenu("credits").AddItem(new MenuItem("TehBlaxxor", "TehBlaxxor"));
+            Menu.SubMenu("credits").AddItem(new MenuItem("zvodd", "zvodd"));
 
             Menu.AddToMainMenu();
             
