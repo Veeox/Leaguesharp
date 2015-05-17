@@ -48,10 +48,17 @@ namespace PetSharp
         public static string PetName;
         public static int CashBalance;
 
-        //Buff Food Costs
+        //Buff Food
+            //Costs
         private static int Food1Cost = 500;
         private static int Food2Cost = 500;
         private static int Food3Cost = 500;
+            //Names
+        private static string Food1 = "2x XP";
+        private static string Food2 = "Need Ideas";
+        private static string Food3 = "Need Ideas";
+            //Bools
+        private static bool FoodXP = false;
         
         //Drag and Baroon Stuff
         private static string DragonBuff = "s5test_dragonslayerbuff";
@@ -104,9 +111,9 @@ namespace PetSharp
             //shop menu
             Menu.AddSubMenu(new Menu("PetSharp Shop", "shop"));
             Menu.SubMenu("shop").AddItem(new MenuItem("bfood", "Buff Food"));
-            Menu.SubMenu("shop").AddItem(new MenuItem("food1", "Buy Food 1").SetValue(false));
-            Menu.SubMenu("shop").AddItem(new MenuItem("food2", "Buy Food 2").SetValue(false));
-            Menu.SubMenu("shop").AddItem(new MenuItem("food3", "Buy Food 3").SetValue(false));
+            Menu.SubMenu("shop").AddItem(new MenuItem("food1", "Buy " + Food1 + " ($" + Food1Cost + ")").SetValue(false));
+            Menu.SubMenu("shop").AddItem(new MenuItem("food2", "Buy " + Food2 + " ($" + Food2Cost + ")").SetValue(false));
+            Menu.SubMenu("shop").AddItem(new MenuItem("food3", "Buy " + Food3 + " ($" + Food3Cost + ")").SetValue(false));
 
             //Draw menu
             Menu.AddSubMenu(new Menu("Drawings", "draw"));
@@ -136,6 +143,7 @@ namespace PetSharp
             {
                 return;
             }
+
             var xpos = 1660;
             var ypos = 660;
 
@@ -163,8 +171,6 @@ namespace PetSharp
                 ShopBuy();
                 ManualSave();
             }
-            
-
         }
 
         //Initialize all the things!
@@ -174,7 +180,7 @@ namespace PetSharp
             CustomEvents.Game.OnGameEnd += OnEnd;
             Game.OnNotify += OnGameNotify;
             Drawing.OnDraw += Drawing_OnDraw;
-            Notifications.AddNotification("PetSharp by Veeox: Loaded!", 5).SetTextColor(NotificationColor);
+            Notifications.AddNotification("PetSharp v" + Ver + ": Loaded!", 5).SetTextColor(NotificationColor);
         }
 
         private static void OnGameNotify(GameNotifyEventArgs args)
@@ -229,6 +235,8 @@ namespace PetSharp
                         CashBalance += 5;
                     }
                     break;
+
+                    //This is a test case - remove me when finished testing!
                 case GameEventId.OnDie:
                     var al = FindPlayerByNetworkId(killer);
 
@@ -247,6 +255,8 @@ namespace PetSharp
                         Console.WriteLine("Killed a ward!");
                     }
                     break;
+
+
                 //case GameEventId.OnQuit:
                 //    ConvertInt(Lvl, CurXP, MaxXP, CashBalance);
                 //    break;
@@ -411,8 +421,10 @@ namespace PetSharp
             {
                 if (CashBalance >= Food1Cost)
                 {
-                    Notifications.AddNotification("PetSharp: Food 1 Bought!", 2).SetTextColor(NotificationColor);
+                    Notifications.AddNotification("PetSharp: " + Food1 + " Bought!", 2).SetTextColor(NotificationColor);
+                    FoodXP = true;
 
+                    //Deduct Cost
                     CashBalance -= Food1Cost;
                 }
                 else
@@ -425,8 +437,9 @@ namespace PetSharp
             {
                 if (CashBalance >= Food2Cost)
                 {
-                    Notifications.AddNotification("PetSharp: Food 2 Bought!", 2).SetTextColor(NotificationColor);
+                    Notifications.AddNotification("PetSharp: " + Food2 + " Bought!", 2).SetTextColor(NotificationColor);
 
+                    //Deduct Cost
                     CashBalance -= Food2Cost;
                 }
                 else
@@ -439,8 +452,9 @@ namespace PetSharp
             {
                 if (CashBalance >= Food3Cost)
                 {
-                    Notifications.AddNotification("PetSharp: Food 3 Bought!", 2).SetTextColor(NotificationColor);
+                    Notifications.AddNotification("PetSharp: " + Food3 + " Bought!", 2).SetTextColor(NotificationColor);
 
+                    //Deduct Cost
                     CashBalance -= Food3Cost;
                 }
                 else
