@@ -47,6 +47,11 @@ namespace PetSharp
         public static int Lvl;
         public static string PetName;
         public static int CashBalance;
+
+        //Buff Food Costs
+        private static int Food1Cost = 500;
+        private static int Food2Cost = 500;
+        private static int Food3Cost = 500;
         
         //Drag and Baroon Stuff
         private static string DragonBuff = "s5test_dragonslayerbuff";
@@ -111,6 +116,7 @@ namespace PetSharp
             //Misc menu
             Menu.AddSubMenu(new Menu("Misc", "misc"));
             Menu.SubMenu("misc").AddItem(new MenuItem("track", "Track Game").SetValue(true));
+            Menu.SubMenu("misc").AddItem(new MenuItem("save", "Manual Save").SetValue(false));
             Menu.SubMenu("misc").AddItem(new MenuItem("new", "New Pet (Start Over)").SetValue(false));
 
             //Credits menu
@@ -155,6 +161,7 @@ namespace PetSharp
                 BaroonCheck();
                 GainXP();
                 ShopBuy();
+                ManualSave();
             }
             
 
@@ -297,6 +304,18 @@ namespace PetSharp
             ConvertInt(Lvl, CurXP, MaxXP, CashBalance);
         }
 
+        private static void ManualSave()
+        {
+            if (Menu.Item("save").GetValue<bool>())
+            {
+                Notifications.AddNotification("PetSharp: Saving...", 2).SetTextColor(NotificationColor);
+                ConvertInt(Lvl, CurXP, MaxXP, CashBalance);
+                Menu.Item("save").SetValue(false);
+                Notifications.AddNotification("PetSharp: Progress Saved!", 2).SetTextColor(NotificationColor);
+            }
+
+        }
+
         //Convert Int
         public static void ConvertInt(int lvl, int currxp, int maxxp, int cash) 
         {
@@ -390,19 +409,43 @@ namespace PetSharp
 
             if (Menu.Item("food1").GetValue<bool>())
             {
-                Notifications.AddNotification("PetSharp: Food 1 Bought!", 2).SetTextColor(NotificationColor);
+                if (CashBalance >= Food1Cost)
+                {
+                    Notifications.AddNotification("PetSharp: Food 1 Bought!", 2).SetTextColor(NotificationColor);
+
+                    CashBalance -= Food1Cost;
+                }
+                else
+                    Notifications.AddNotification("PetSharp: Not Enough Cash!", 2).SetTextColor(NotificationColor);
+
                 Menu.Item("food1").SetValue(false);
             }
 
             if (Menu.Item("food2").GetValue<bool>())
             {
-                Notifications.AddNotification("PetSharp: Food 2 Bought!", 2).SetTextColor(NotificationColor);
+                if (CashBalance >= Food2Cost)
+                {
+                    Notifications.AddNotification("PetSharp: Food 2 Bought!", 2).SetTextColor(NotificationColor);
+
+                    CashBalance -= Food2Cost;
+                }
+                else
+                    Notifications.AddNotification("PetSharp: Not Enough Cash!", 2).SetTextColor(NotificationColor);
+
                 Menu.Item("food2").SetValue(false);
             }
 
             if (Menu.Item("food3").GetValue<bool>())
             {
-                Notifications.AddNotification("PetSharp: Food 3 Bought!", 2).SetTextColor(NotificationColor);
+                if (CashBalance >= Food3Cost)
+                {
+                    Notifications.AddNotification("PetSharp: Food 3 Bought!", 2).SetTextColor(NotificationColor);
+
+                    CashBalance -= Food3Cost;
+                }
+                else
+                    Notifications.AddNotification("PetSharp: Not Enough Cash!", 2).SetTextColor(NotificationColor);
+
                 Menu.Item("food3").SetValue(false);
             }
         
