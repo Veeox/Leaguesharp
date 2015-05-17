@@ -19,8 +19,9 @@ using SharpDX;
 
     //Name generator - #Done! (might be inefficient)
     //Pet Sprite
-    //Cash system
-    //Shop system
+    //Happy Hour
+    //Cash system - #Done
+    //Shop system - #Done mostly
         //Buff Food
         //Needs moar ideas pls
     //Event System fixes and testing
@@ -236,7 +237,7 @@ namespace PetSharp
                     }
                     break;
 
-                    //This is a test case - remove me when finished testing!
+                //This is a test case - remove me when finished testing!
                 case GameEventId.OnDie:
                     var al = FindPlayerByNetworkId(killer);
 
