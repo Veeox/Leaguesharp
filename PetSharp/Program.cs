@@ -18,7 +18,6 @@ using SharpDX;
 #region ToDo
 
     //Name generator - #Done! (might be inefficient)
-    //Pet Sprite
     //Happy Hour
     //Cash system - #Done
     //Shop system - #Done mostly
@@ -148,7 +147,7 @@ namespace PetSharp
             var xpos = 1660;
             var ypos = 660;
 
-            Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp v" + Ver + " by Veeox");
+            Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp v" + Ver);
             Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Pet Name: " + PetName);
             Drawing.DrawText(xpos, ypos + 40, System.Drawing.Color.LightSkyBlue, "Level: " + (int)Lvl);
             Drawing.DrawText(xpos, ypos + 60, System.Drawing.Color.LightSkyBlue, "XP: " + (int)CurXP + "/" + (int)MaxXP);
