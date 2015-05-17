@@ -419,8 +419,6 @@ namespace PetSharp
 
             if (Menu.Item("food1").GetValue<bool>())
             {
-                
-
                 if (CashBalance >= Food1Cost)
                 {
                     if (FoodXP)
