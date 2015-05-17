@@ -168,25 +168,25 @@ namespace PetSharp
             {
                     
                 case GameEventId.OnChampionDoubleKill:
-                    if (ObjectManager.Player.IsMe)
+                    if (killer == Player.NetworkId)
                     {
                         CurXP += MaxXP / 80;
                     }
                     break;
                 case GameEventId.OnChampionPentaKill:
-                    if (ObjectManager.Player.IsMe)
+                    if (killer == Player.NetworkId)
                     {
                         CurXP += MaxXP / 15;
                     }
                     break;
                 case GameEventId.OnChampionQuadraKill:
-                    if (ObjectManager.Player.IsMe)
+                    if (killer == Player.NetworkId)
                     {
                         CurXP += MaxXP / 45;
                     }
                     break;
                 case GameEventId.OnChampionTripleKill:
-                    if (ObjectManager.Player.NetworkId == args.NetworkId)
+                    if (killer == Player.NetworkId)
                     {
                         CurXP += MaxXP / 75;
                     }
@@ -228,9 +228,9 @@ namespace PetSharp
                         Console.WriteLine("Killed a ward!");
                     }
                     break;
-                case GameEventId.OnQuit:
-                    ConvertInt(Lvl, CurXP, MaxXP);
-                    break;
+                //case GameEventId.OnQuit:
+                //    ConvertInt(Lvl, CurXP, MaxXP);
+                //    break;
             }
         }
 
@@ -268,11 +268,13 @@ namespace PetSharp
             }
         }
 
+        //End of game Save
         static void OnEnd(EventArgs args)
         {
             ConvertInt(Lvl, CurXP, MaxXP);
         }
 
+        //Run first time only
         private static void FirstRun()
         {
             RandomName();
