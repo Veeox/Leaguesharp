@@ -46,6 +46,7 @@ namespace PetSharp
         public static int MaxXP;
         public static int Lvl;
         public static string PetName;
+        public static int CashBalance;
         
         //Drag and Baroon Stuff
         private static string DragonBuff = "s5test_dragonslayerbuff";
@@ -130,12 +131,13 @@ namespace PetSharp
                 return;
             }
             var xpos = 1660;
-            var ypos = 680;
+            var ypos = 660;
 
             Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp v" + Ver + " by Veeox");
             Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Pet Name: " + PetName);
             Drawing.DrawText(xpos, ypos + 40, System.Drawing.Color.LightSkyBlue, "Level: " + (int)Lvl);
             Drawing.DrawText(xpos, ypos + 60, System.Drawing.Color.LightSkyBlue, "XP: " + (int)CurXP + "/" + (int)MaxXP);
+            Drawing.DrawText(xpos, ypos + 80, System.Drawing.Color.LightSkyBlue, "Cash: $" + (int)CashBalance);
         }
 
         private static void OnUpdate(EventArgs args)
@@ -179,24 +181,28 @@ namespace PetSharp
                     if (killer == Player.NetworkId)
                     {
                         CurXP += MaxXP / 80;
+                        CashBalance += 10;
                     }
                     break;
                 case GameEventId.OnChampionPentaKill:
                     if (killer == Player.NetworkId)
                     {
                         CurXP += MaxXP / 15;
+                        CashBalance += 75;
                     }
                     break;
                 case GameEventId.OnChampionQuadraKill:
                     if (killer == Player.NetworkId)
                     {
                         CurXP += MaxXP / 45;
+                        CashBalance += 50;
                     }
                     break;
                 case GameEventId.OnChampionTripleKill:
                     if (killer == Player.NetworkId)
                     {
                         CurXP += MaxXP / 75;
+                        CashBalance += 35;
                     }
                     break;
                 case GameEventId.OnAce:
@@ -205,6 +211,7 @@ namespace PetSharp
                     if (pl != null && pl.IsAlly)
                         {
                             CurXP += MaxXP / 80;
+                            CashBalance += 15;
                         }
                     break;
                 case GameEventId.OnChampionDie:
@@ -212,8 +219,7 @@ namespace PetSharp
                     if (killer == Player.NetworkId)
                     {
                         CurXP += MaxXP / 75;
-                        Console.WriteLine("Yay a Kill!");
-                        Console.WriteLine(CurXP);
+                        CashBalance += 5;
                     }
                     break;
                 case GameEventId.OnDie:
@@ -235,7 +241,7 @@ namespace PetSharp
                     }
                     break;
                 //case GameEventId.OnQuit:
-                //    ConvertInt(Lvl, CurXP, MaxXP);
+                //    ConvertInt(Lvl, CurXP, MaxXP, CashBalance);
                 //    break;
             }
         }
@@ -277,7 +283,7 @@ namespace PetSharp
         //End of game Save
         static void OnEnd(EventArgs args)
         {
-            ConvertInt(Lvl, CurXP, MaxXP);
+            ConvertInt(Lvl, CurXP, MaxXP, CashBalance);
         }
 
         //Run first time only
@@ -287,29 +293,33 @@ namespace PetSharp
             Lvl = 1;
             CurXP = 0;
             MaxXP = 100;
-            ConvertInt(Lvl, CurXP, MaxXP);
+            CashBalance = 0;
+            ConvertInt(Lvl, CurXP, MaxXP, CashBalance);
         }
 
         //Convert Int
-        public static void ConvertInt(int lvl, int currxp, int maxxp) 
+        public static void ConvertInt(int lvl, int currxp, int maxxp, int cash) 
         {
             string level = Lvl.ToString();
             string currentXP = CurXP.ToString();
             string MaximumXP = MaxXP.ToString();
-            SaveData(level, currentXP, MaximumXP);
+            string CashBal = CashBalance.ToString();
+            SaveData(level, currentXP, MaximumXP, CashBal);
         }
         
         //Convert String
-        public static void ConvertString(string lvl, string currxp, string maxxp)
+        public static void ConvertString(string lvl, string currxp, string maxxp, string cash)
         {
             
             int level = int.Parse(lvl);
             int currentXP = int.Parse(currxp);
             int maximumXP = int.Parse(maxxp);
+            int CashBal = int.Parse(cash);
 
             Lvl = level;
             CurXP = currentXP;
             MaxXP = maximumXP;
+            CashBalance = CashBal;
         }
 
         //Used to read data
@@ -318,6 +328,7 @@ namespace PetSharp
             string LvlStr = null;
             string CurXPStr = null;
             string MaxXPStr = null;
+            string CashStr = null;
 
             using (var sr = new System.IO.StreamReader(Config.AppDataDirectory + @"\PetSharp\" + FileName, true))
             {
@@ -339,15 +350,18 @@ namespace PetSharp
                         case 4:
                             MaxXPStr = line;
                             break;
+                        case 5:
+                            CashStr = line;
+                            break;
                     }
                 }
-                ConvertString(LvlStr, CurXPStr, MaxXPStr);
+                ConvertString(LvlStr, CurXPStr, MaxXPStr, CashStr);
             }
                             
         }
 
         //Used to save data
-        public static void SaveData(string lvl, string currxp, string maxxp) 
+        public static void SaveData(string lvl, string currxp, string maxxp, string cash) 
         {
             File.WriteAllText(Config.AppDataDirectory + @"\PetSharp\" + FileName, PetName + "\n");
             using (var file = new StreamWriter(Config.AppDataDirectory + @"\PetSharp\" + FileName, true))
@@ -355,6 +369,7 @@ namespace PetSharp
                 file.WriteLine(lvl);
                 file.WriteLine(currxp);
                 file.WriteLine(maxxp);
+                file.WriteLine(cash);
                 file.Close();
             }
         }
@@ -400,6 +415,7 @@ namespace PetSharp
                 CurXP = (CurXP - MaxXP);
                 MaxXP = (MaxXP * 2);
                 Lvl++;
+                Notifications.AddNotification("PetSharp: Leveled up!", 2).SetTextColor(NotificationColor);
             }
         }
 
@@ -418,13 +434,14 @@ namespace PetSharp
                 if (nexus.IsEnemy)
                 {
                     CurXP += MaxXP / 10;
-                    ConvertInt(Lvl, CurXP, MaxXP);
+                    CashBalance += 100;
+                    ConvertInt(Lvl, CurXP, MaxXP, CashBalance);
                     Console.WriteLine("WON!");
                     DoOnce = true;
                 }
                 else
                 {
-                    ConvertInt(Lvl, CurXP, MaxXP);
+                    ConvertInt(Lvl, CurXP, MaxXP, CashBalance);
                     DoOnce = true;
                 }
             }
@@ -433,18 +450,21 @@ namespace PetSharp
         private static void KillDrag()
         {
             CurXP += MaxXP / 30;
+            CashBalance += 20;
             Console.WriteLine("Drag Killed");
         }
 
         private static void KillBaroon()
         {
             CurXP += MaxXP / 50;
+            CashBalance += 35;
             Console.WriteLine("Baroon Killed");
         }
 
         private static void KillWard()
         {
             CurXP += MaxXP / 100;
+            CashBalance += 1;
         }
 
         private static void EndScore()
