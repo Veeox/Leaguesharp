@@ -39,6 +39,9 @@ namespace PetSharp
 {
     class Program
     {
+        public const string Ver = "0.0.1.5";
+
+        //Main Pet Vars
         public static int CurXP;
         public static int MaxXP;
         public static int Lvl;
@@ -50,17 +53,18 @@ namespace PetSharp
         private static int AllyD;
         private static int AllyB;
 
-        public static string FileName;
-
         private static Obj_AI_Minion Baron { get; set; }
         private static Obj_AI_Minion Dragon { get; set; }
 
-        public static Menu Menu;
-        public const string Ver = "0.0.1.5";
+        //File name setup for saving
+        public static string FileName;
 
+        //Drawing Colour
         private static System.Drawing.Color NotificationColor = System.Drawing.Color.FromArgb(0, 255, 0);
 
         private static Obj_AI_Hero Player { get { return ObjectManager.Player; } }
+
+        public static Menu Menu;
 
 
         static void Main(string[] args)
