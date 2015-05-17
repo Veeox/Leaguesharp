@@ -60,6 +60,8 @@ namespace PetSharp
         public static Menu Menu;
         public const string Ver = "0.0.1.0";
 
+        private static System.Drawing.Color NotificationColor = System.Drawing.Color.FromArgb(0, 255, 0);
+
         private static Obj_AI_Hero Player { get { return ObjectManager.Player; } }
 
 
@@ -103,13 +105,12 @@ namespace PetSharp
             Menu.SubMenu("draw").AddItem(new MenuItem("drawstats", "Draw Stats").SetValue(true));
             Menu.SubMenu("draw").AddItem(new MenuItem("drawsprites", "Draw Sprites").SetValue(true));
 
-            //Track menu
-            Menu.AddItem(new MenuItem("track", "Track Game").SetValue(true));
+            //Misc menu
+            Menu.AddSubMenu(new Menu("Misc", "misc"));
+            Menu.SubMenu("misc").AddItem(new MenuItem("track", "Track Game").SetValue(true));
+            Menu.SubMenu("misc").AddItem(new MenuItem("new", "New Pet (Start Over)").SetValue(false));
 
             Menu.AddToMainMenu();
-
-            //Prints
-            //ShowNotification("PetSharp v" + Ver + " by Veeox Loaded!", 3000);
             
             
         }
@@ -139,6 +140,7 @@ namespace PetSharp
             }
             else
             {
+                NewPet();
                 DragonCheck();
                 BaroonCheck();
                 GainXP();
@@ -155,6 +157,7 @@ namespace PetSharp
             CustomEvents.Game.OnGameEnd += OnEnd;
             Game.OnNotify += OnGameNotify;
             Drawing.OnDraw += Drawing_OnDraw;
+            Notifications.AddNotification("PetSharp by Veeox: Loaded!", 5).SetTextColor(NotificationColor);
         }
 
         private static void OnGameNotify(GameNotifyEventArgs args)
@@ -364,19 +367,19 @@ namespace PetSharp
 
             if (Menu.Item("food1").GetValue<bool>())
             {
-                Console.WriteLine("Buy food 1");
+                Notifications.AddNotification("PetSharp: Food 1 Bought!", 2).SetTextColor(NotificationColor);
                 Menu.Item("food1").SetValue(false);
             }
 
             if (Menu.Item("food2").GetValue<bool>())
             {
-                Console.WriteLine("Buy food 2");
+                Notifications.AddNotification("PetSharp: Food 2 Bought!", 2).SetTextColor(NotificationColor);
                 Menu.Item("food2").SetValue(false);
             }
 
             if (Menu.Item("food3").GetValue<bool>())
             {
-                Console.WriteLine("Buy food 3");
+                Notifications.AddNotification("PetSharp: Food 3 Bought!", 2).SetTextColor(NotificationColor);
                 Menu.Item("food3").SetValue(false);
             }
         
@@ -447,6 +450,16 @@ namespace PetSharp
             Random RandName = new Random();
             string Temp = NameDatabase1[RandName.Next(0, NameDatabase1.Length)] + NameDatabase2[RandName.Next(0, NameDatabase2.Length)];
             PetName = Temp;
+        }
+
+        private static void NewPet()
+        {
+            if (Menu.Item("new").GetValue<bool>())
+            {
+                FirstRun();
+                Notifications.AddNotification("PetSharp: New Pet Created!", 2).SetTextColor(NotificationColor);
+                Menu.Item("new").SetValue(false);
+            }
         }
 
     }
