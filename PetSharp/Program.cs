@@ -420,17 +420,30 @@ namespace PetSharp
 
             if (Menu.Item("food1").GetValue<bool>())
             {
+                
+
                 if (CashBalance >= Food1Cost)
                 {
-                    Notifications.AddNotification("PetSharp: " + Food1 + " Bought!", 2).SetTextColor(NotificationColor);
-                    FoodXP = true;
+                    if (FoodXP)
+                    {
+                        Notifications.AddNotification("PetSharp: Cannot Buy Twice", 2).SetTextColor(NotificationColor);
+                        Menu.Item("food1").SetValue(false);
+                        return;
+                    }
+                    else
+                    {
+                        Notifications.AddNotification("PetSharp: " + Food1 + " Bought!", 2).SetTextColor(NotificationColor);
+                        FoodXP = true;
+                    }
 
                     //Deduct Cost
                     CashBalance -= Food1Cost;
                 }
                 else
+                {
                     Notifications.AddNotification("PetSharp: Not Enough Cash!", 2).SetTextColor(NotificationColor);
-
+                }
+                
                 Menu.Item("food1").SetValue(false);
             }
 
