@@ -27,6 +27,11 @@ using SharpDX;
     //Battles?
     //Test XP gains
     //Save pet info to server
+    //Top scores/leaderboard
+    //anti-cheat
+    //GUI Stuff
+        //Shop
+        //Sprites for pets
 
 #endregion
 
