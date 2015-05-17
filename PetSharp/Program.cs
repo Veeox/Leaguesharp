@@ -58,7 +58,7 @@ namespace PetSharp
         private static Obj_AI_Minion Dragon { get; set; }
 
         public static Menu Menu;
-        public const string Ver = "0.0.4";
+        public const string Ver = "0.0.1.0";
 
         private static Obj_AI_Hero Player { get { return ObjectManager.Player; } }
 
