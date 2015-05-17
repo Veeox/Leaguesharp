@@ -192,15 +192,12 @@ namespace PetSharp
                     }
                     break;
                 case GameEventId.OnAce:
-                    foreach (var i in ObjectManager.Get<Obj_AI_Hero>())
-                    {
-                        if (i.IsAlly)
+                    var pl = FindPlayerByNetworkId(killer);
+
+                    if (pl != null && pl.IsAlly)
                         {
                             CurXP += MaxXP / 80;
                         }
-                        if (i.IsEnemy)
-                            return;
-                    }
                     break;
                 case GameEventId.OnChampionDie:
                     
@@ -212,11 +209,12 @@ namespace PetSharp
                     }
                     break;
                 case GameEventId.OnDie:
+                    var al = FindPlayerByNetworkId(killer);
 
-                    if (killer == Player.NetworkId)
+                    if (al != null && al.IsAlly)
                     {
                         CurXP += MaxXP / 75;
-                        Console.WriteLine("Yay FB!");
+                        Console.WriteLine("this is a test");
                         Console.WriteLine(CurXP + "/" + MaxXP);
                     }
                     break;
@@ -464,5 +462,17 @@ namespace PetSharp
             }
         }
 
-    }
+        public static Obj_AI_Hero FindPlayerByNetworkId(int id)
+        {
+            Obj_AI_Hero player = null;
+            foreach (var n in HeroManager.AllHeroes)
+            {
+                if (n.NetworkId == id)
+                    player = n;
+            }
+            return player;
+        }       
+
+   }
 }
+
