@@ -79,6 +79,8 @@ namespace PetSharp
 
         public static Menu Menu;
 
+        private static bool DoOnce = false;
+
 
         static void Main(string[] args)
         {
@@ -489,7 +491,6 @@ namespace PetSharp
 
         private static void WinGame()
         {
-            var DoOnce = false;
             var nexus = ObjectManager.Get<Obj_HQ>().Find(n => n.Health < 1);
 
             if (nexus == null)
