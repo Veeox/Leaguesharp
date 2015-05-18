@@ -32,6 +32,7 @@ using SharpDX;
     //GUI Stuff
         //Shop
         //Sprites for pets
+    //New Game+
 
 #endregion
 
