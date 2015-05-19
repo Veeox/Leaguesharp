@@ -75,8 +75,10 @@ namespace PetSharp
         //File name setup for saving
         public static string FileName;
 
-        //Drawing Colour
+        //Drawing
         private static System.Drawing.Color NotificationColor = System.Drawing.Color.FromArgb(0, 255, 0);
+        private static Notification sick1;
+        private static Notification sick2;
 
         private static Obj_AI_Hero Player { get { return ObjectManager.Player; } }
 
@@ -158,7 +160,7 @@ namespace PetSharp
             Drawing.DrawText(xpos, ypos + 80, System.Drawing.Color.LightSkyBlue, "PetBux: $" + (int)CashBalance);
             if (Sick)
             {
-                Drawing.DrawText(xpos, ypos + 100, System.Drawing.Color.LightSkyBlue, "Pet Health: Sick");
+                Drawing.DrawText(xpos, ypos + 100, System.Drawing.Color.LightSkyBlue, "Pet Health: Sick (Will die soon!)");
             }
             else
             {
@@ -198,6 +200,7 @@ namespace PetSharp
         private static void OnGameNotify(GameNotifyEventArgs args)
         {
             var killer = args.NetworkId;
+            var al = FindPlayerByNetworkId(killer);
 
             switch (args.EventId) //Check for XP events
             {
@@ -250,8 +253,6 @@ namespace PetSharp
 
                 //This is a test case - remove me when finished testing!
                 case GameEventId.OnDie:
-                    var al = FindPlayerByNetworkId(killer);
-
                     if (al != null && al.IsAlly)
                     {
                         CurXP += MaxXP / 75;
@@ -267,9 +268,10 @@ namespace PetSharp
                         Console.WriteLine("Killed a ward!");
                     }
                     break;
-                case GameEventId.OnChampionKill:
-                    if (killer == Player.NetworkId)
+                case GameEventId.OnChampionKillPost:
+                    if (killer == Player.NetworkId && !Sick)
                     {
+                        Console.WriteLine("Sick");
                         if (Lvl > 2)
                         {
                             GetSick();
@@ -450,9 +452,14 @@ namespace PetSharp
                     }
                     else
                     {
-                        Notifications.AddNotification("PetSharp: " + Food1 + " Bought!", 2).SetTextColor(NotificationColor);
-                        Notifications.AddNotification("PetSharp: Pet has been cured!", 2).SetTextColor(NotificationColor);
+                        Notifications.RemoveNotification(sick1);
+                        Notifications.RemoveNotification(sick2);
+                        sick1 = null;
+                        sick2 = null;
+                        Notifications.AddNotification("PetSharp: " + Food1 + " Bought!", 20).SetTextColor(NotificationColor);
+                        Notifications.AddNotification("PetSharp: Pet has been cured!", 20).SetTextColor(NotificationColor);
                         Sick = false;
+                        
                     }
 
                     //Deduct Cost
@@ -546,11 +553,19 @@ namespace PetSharp
                     CashBalance += 100;
                     ConvertInt(Lvl, CurXP, MaxXP, CashBalance);
                     Console.WriteLine("WON!");
+                    if (Sick)
+                    {
+                        PetDie();
+                    }
                     DoOnce = true;
                 }
                 else
                 {
                     ConvertInt(Lvl, CurXP, MaxXP, CashBalance);
+                    if (Sick)
+                    {
+                        PetDie();
+                    }
                     DoOnce = true;
                 }
             }
@@ -621,12 +636,23 @@ namespace PetSharp
 
             int r = rnd.Next(10) + 1;
 
-            if (r >= 7)
+            if (r >= 1)
             {
-                Notifications.AddNotification("PetSharp: Your pet is sick!", 30).SetTextColor(NotificationColor);
-                Notifications.AddNotification("PetSharp: Buy Medicine from the shop!", 30).SetTextColor(NotificationColor);
                 Sick = true;
+                sick1 = Notifications.AddNotification("PetSharp: Your pet is sick!").SetTextColor(NotificationColor);
+                sick2 = Notifications.AddNotification("PetSharp: Buy Medicine from the Shop!").SetTextColor(NotificationColor);
             }
+        }
+
+        public static void PetDie()
+        {
+            Notifications.RemoveNotification(sick1);
+            Notifications.RemoveNotification(sick2);
+            sick1 = null;
+            sick2 = null;
+            Notifications.AddNotification("PetSharp: Your pet has died!", 30).SetTextColor(NotificationColor);
+            FirstRun();
+            Notifications.AddNotification("PetSharp: New Pet Created!", 30).SetTextColor(NotificationColor);
         }
 
    }
