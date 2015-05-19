@@ -40,7 +40,7 @@ namespace PetSharp
 {
     class Program
     {
-        public const string Ver = "0.0.5.0";
+        public const string Ver = "0.0.7.0";
 
         //Main Pet Vars
         public static int CurXP;
@@ -48,16 +48,18 @@ namespace PetSharp
         public static int Lvl;
         public static string PetName;
         public static int CashBalance;
+        public static bool Sick = false;
+        
 
         //Buff Food
             //Costs
-        private static int Food1Cost = 500;
+        private static int Food1Cost = 100;
         private static int Food2Cost = 500;
         private static int Food3Cost = 500;
             //Names
-        private static string Food1 = "2x XP";
+        private static string Food1 = "Medicine";
         private static string Food2 = "Need Ideas";
-        private static string Food3 = "Need Ideas";
+        private static string Food3 = "2x XP";
             //Bools
         private static bool FoodXP = false;
         
@@ -113,7 +115,6 @@ namespace PetSharp
 
             //shop menu
             Menu.AddSubMenu(new Menu("PetSharp Shop", "shop"));
-            Menu.SubMenu("shop").AddItem(new MenuItem("bfood", "Buff Food"));
             Menu.SubMenu("shop").AddItem(new MenuItem("food1", "Buy " + Food1 + " ($" + Food1Cost + ")").SetValue(false));
             Menu.SubMenu("shop").AddItem(new MenuItem("food2", "Buy " + Food2 + " ($" + Food2Cost + ")").SetValue(false));
             Menu.SubMenu("shop").AddItem(new MenuItem("food3", "Buy " + Food3 + " ($" + Food3Cost + ")").SetValue(false));
@@ -148,13 +149,21 @@ namespace PetSharp
             }
 
             var xpos = 1660;
-            var ypos = 660;
+            var ypos = 640;
 
             Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp v" + Ver);
             Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Pet Name: " + PetName);
             Drawing.DrawText(xpos, ypos + 40, System.Drawing.Color.LightSkyBlue, "Level: " + (int)Lvl);
             Drawing.DrawText(xpos, ypos + 60, System.Drawing.Color.LightSkyBlue, "XP: " + (int)CurXP + "/" + (int)MaxXP);
             Drawing.DrawText(xpos, ypos + 80, System.Drawing.Color.LightSkyBlue, "PetBux: $" + (int)CashBalance);
+            if (Sick)
+            {
+                Drawing.DrawText(xpos, ypos + 100, System.Drawing.Color.LightSkyBlue, "Pet Health: Sick");
+            }
+            else
+            {
+                Drawing.DrawText(xpos, ypos + 100, System.Drawing.Color.LightSkyBlue, "Pet Health: Fine");
+            }
         }
 
         private static void OnUpdate(EventArgs args)
@@ -256,6 +265,15 @@ namespace PetSharp
                     {
                         KillWard();
                         Console.WriteLine("Killed a ward!");
+                    }
+                    break;
+                case GameEventId.OnChampionKill:
+                    if (killer == Player.NetworkId)
+                    {
+                        if (Lvl > 2)
+                        {
+                            GetSick();
+                        }
                     }
                     break;
 
@@ -424,16 +442,17 @@ namespace PetSharp
             {
                 if (CashBalance >= Food1Cost)
                 {
-                    if (FoodXP)
+                    if (!Sick)
                     {
-                        Notifications.AddNotification("PetSharp: Cannot Buy Twice", 2).SetTextColor(NotificationColor);
+                        Notifications.AddNotification("PetSharp: Pet is not sick!", 2).SetTextColor(NotificationColor);
                         Menu.Item("food1").SetValue(false);
                         return;
                     }
                     else
                     {
                         Notifications.AddNotification("PetSharp: " + Food1 + " Bought!", 2).SetTextColor(NotificationColor);
-                        FoodXP = true;
+                        Notifications.AddNotification("PetSharp: Pet has been cured!", 2).SetTextColor(NotificationColor);
+                        Sick = false;
                     }
 
                     //Deduct Cost
@@ -451,7 +470,17 @@ namespace PetSharp
             {
                 if (CashBalance >= Food2Cost)
                 {
-                    Notifications.AddNotification("PetSharp: " + Food2 + " Bought!", 2).SetTextColor(NotificationColor);
+                    if (!Sick)
+                    {
+                        Notifications.AddNotification("PetSharp: Cannot Buy Twice", 2).SetTextColor(NotificationColor);
+                        Menu.Item("food2").SetValue(false);
+                        return;
+                    }
+                    else
+                    {
+                        Notifications.AddNotification("PetSharp: " + Food2 + " Bought!", 2).SetTextColor(NotificationColor);
+                        FoodXP = true;
+                    }
 
                     //Deduct Cost
                     CashBalance -= Food2Cost;
@@ -466,7 +495,17 @@ namespace PetSharp
             {
                 if (CashBalance >= Food3Cost)
                 {
-                    Notifications.AddNotification("PetSharp: " + Food3 + " Bought!", 2).SetTextColor(NotificationColor);
+                    if (FoodXP)
+                    {
+                        Notifications.AddNotification("PetSharp: Cannot Buy Twice", 2).SetTextColor(NotificationColor);
+                        Menu.Item("food3").SetValue(false);
+                        return;
+                    }
+                    else
+                    {
+                        Notifications.AddNotification("PetSharp: " + Food3 + " Bought!", 2).SetTextColor(NotificationColor);
+                        FoodXP = true;
+                    }
 
                     //Deduct Cost
                     CashBalance -= Food3Cost;
@@ -574,7 +613,21 @@ namespace PetSharp
                     player = n;
             }
             return player;
-        }       
+        }
+
+        public static void GetSick()
+        {
+            Random rnd = new Random();
+
+            int r = rnd.Next(10) + 1;
+
+            if (r >= 7)
+            {
+                Notifications.AddNotification("PetSharp: Your pet is sick!", 30).SetTextColor(NotificationColor);
+                Notifications.AddNotification("PetSharp: Buy Medicine from the shop!", 30).SetTextColor(NotificationColor);
+                Sick = true;
+            }
+        }
 
    }
 }
