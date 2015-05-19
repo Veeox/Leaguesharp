@@ -40,7 +40,7 @@ namespace PetSharp
 {
     class Program
     {
-        public const string Ver = "0.0.7.0";
+        public const string Ver = "0.0.7.5";
 
         //Main Pet Vars
         public static int CurXP;
