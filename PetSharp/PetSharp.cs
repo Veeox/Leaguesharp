@@ -223,7 +223,7 @@ namespace PetSharp
             }
         }
 
-        private static void WinGame()
+        public static void WinGame()
         {
             var nexus = ObjectManager.Get<Obj_HQ>().Find(n => n.Health < 1);
 

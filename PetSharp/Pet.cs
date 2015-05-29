@@ -49,6 +49,7 @@ namespace PetSharp
                 LevelUp();
                 Shop.ShopBuy();
                 Save.ManualSave();
+                PetSharp.WinGame();
             }
         }
 
