@@ -116,15 +116,15 @@ namespace PetSharp
                     }
                     break;
 
-                //This is a test case - remove me when finished testing!
-                case GameEventId.OnDie:
-                    if (al != null && al.IsAlly)
-                    {
-                        Pet.CurXP += Pet.MaxXP / 75;
-                        Console.WriteLine("this is a test");
-                        Console.WriteLine(Pet.CurXP + "/" + Pet.MaxXP);
-                    }
-                    break;
+                ////This is a test case - remove me when finished testing!
+                //case GameEventId.OnDie:
+                //    if (al != null && al.IsAlly)
+                //    {
+                //        Pet.CurXP += Pet.MaxXP / 75;
+                //        Console.WriteLine("this is a test");
+                //        Console.WriteLine(Pet.CurXP + "/" + Pet.MaxXP);
+                //    }
+                //    break;
 
                 case GameEventId.OnKillWard:
                     if (ObjectManager.Player.IsMe)
