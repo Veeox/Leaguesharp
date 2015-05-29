@@ -36,7 +36,6 @@ namespace PetSharp
 
         public static void OnUpdate(EventArgs args)
         {
-
             //Check if enabled
             if (!SharpMenu.Z.Item("track").GetValue<bool>())
             {

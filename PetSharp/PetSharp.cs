@@ -62,6 +62,28 @@ namespace PetSharp
             }
         }
 
+        public static bool Bots()
+        {
+            var CountBots = 0;
+            var bot = false;
+
+            if (HeroManager.AllHeroes.Count <= 2)
+                bot = true;
+            else
+            {
+                foreach (var n in HeroManager.AllHeroes)
+                {
+                    if (n.Name.Contains(" Bot"))
+                        CountBots++;
+                }
+                if (CountBots > 1)
+                {
+                    bot = true;
+                }
+            }
+            return bot;
+        }
+
         internal static void OnGameNotify(GameNotifyEventArgs args)
         {
             var killer = args.NetworkId;
