@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using Color = System.Drawing.Color;
 
 using LeagueSharp;
 using LeagueSharp.Common;
@@ -47,7 +48,7 @@ namespace PetSharp
             var xpos = 1660;
             var ypos = 640;
 
-            Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp");
+            Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp ALPHA");
             Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Pet Name: " + Pet.PetName);
             Drawing.DrawText(xpos, ypos + 40, System.Drawing.Color.LightSkyBlue, "Level: " + (int)Pet.Lvl);
             Drawing.DrawText(xpos, ypos + 60, System.Drawing.Color.LightSkyBlue, "XP: " + (int)Pet.CurXP + "/" + (int)Pet.MaxXP);
@@ -60,6 +61,10 @@ namespace PetSharp
             {
                 Drawing.DrawText(xpos, ypos + 100, System.Drawing.Color.LightSkyBlue, "Pet Health: Fine");
             }
+
+            // Draw Bars
+
+
         }
 
         public static bool Bots()
