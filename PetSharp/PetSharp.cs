@@ -123,7 +123,7 @@ namespace PetSharp
             {
                 foreach (var n in HeroManager.AllHeroes)
                 {
-                    if (n.Name.Contains(" sssBot"))
+                    if (n.Name.Contains(" Bot"))
                         CountBots++;
                 }
                 if (CountBots > 1)
