@@ -58,15 +58,18 @@ namespace PetSharp
                             Pet.PetName = line;
                             break;
                         case 2:
-                            LvlStr = line;
+                            Pet.mySprite = line;
                             break;
                         case 3:
-                            CurXPStr = line;
+                            LvlStr = line;
                             break;
                         case 4:
-                            MaxXPStr = line;
+                            CurXPStr = line;
                             break;
                         case 5:
+                            MaxXPStr = line;
+                            break;
+                        case 6:
                             CashStr = line;
                             break;
                     }
@@ -78,7 +81,7 @@ namespace PetSharp
         //Used to save data
         public static void SaveData(string lvl, string currxp, string maxxp, string cash) 
         {
-            File.WriteAllText(Config.AppDataDirectory + @"\Data\PetSharp\" + FileName, Pet.PetName + "\n");
+            File.WriteAllText(Config.AppDataDirectory + @"\Data\PetSharp\" + FileName, Pet.PetName + "\n" + Pet.mySprite + "\n");
             using (var file = new StreamWriter(Config.AppDataDirectory + @"\Data\PetSharp\" + FileName, true))
             {
                 file.WriteLine(lvl);
@@ -96,6 +99,7 @@ namespace PetSharp
             Pet.CurXP = 0;
             Pet.MaxXP = 100;
             Pet.CashBalance = 0;
+            RandomSprite();
             Converters.ConvertInt(Pet.Lvl, Pet.CurXP, Pet.MaxXP, Pet.CashBalance);
         }
 
@@ -110,6 +114,15 @@ namespace PetSharp
             Random RandName = new Random();
             string Temp = NameDatabase1[RandName.Next(0, NameDatabase1.Length)] + NameDatabase2[RandName.Next(0, NameDatabase2.Length)] + NameDatabase3[RandName.Next(0, NameDatabase3.Length)];
             Pet.PetName = Temp;
+        }
+
+        public static void RandomSprite()
+        {
+            string[] spriteDb1 = { "g4148", "g4174", "g4205", "g4238", "path4249" };
+
+            Random randSprite = new Random();
+            string temp = "Resources.Resource1." + spriteDb1[randSprite.Next(0, spriteDb1.Length)];
+            Pet.mySprite = temp;
         }
 
         public static void NewPet()

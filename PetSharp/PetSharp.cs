@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using Color = System.Drawing.Color;
 
+
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -30,11 +31,29 @@ namespace PetSharp
         public static Notification sick1;
         public static Notification sick2;
 
+        public static int xpos = 0;
+        public static int ypos = 0;
+            //Sprite
+        public static Render.Sprite sprite = null;
+        public static string petSprite;
+
         public PetSharp()
         {
             new Pet();
             SharpMenu.Run();
+
             Drawing.OnDraw += Drawing_OnDraw;
+
+            if (SharpMenu.Z.Item("drawsprites").GetValue<bool>())
+            {
+                Save.ReadSave();
+                Console.WriteLine(Pet.mySprite);
+                
+                sprite = new Render.Sprite(Resources.Resource1.g4205, new Vector2(xpos + 20, ypos - 75));
+                Console.WriteLine(sprite);
+                DrawSprite();
+                
+            }
 
             Notifications.AddNotification("PetSharp: Loaded!", 5).SetTextColor(NotificationColor);
         }
@@ -46,10 +65,19 @@ namespace PetSharp
                 return;
             }
 
-            var xpos = SharpMenu.Z.Item("xpos").GetValue<Slider>().Value;
-            var ypos = SharpMenu.Z.Item("ypos").GetValue<Slider>().Value;
+            xpos = SharpMenu.Z.Item("xpos").GetValue<Slider>().Value;
+            ypos = SharpMenu.Z.Item("ypos").GetValue<Slider>().Value;
 
-            // Draw Bars
+            if (!SharpMenu.Z.Item("drawsprites").GetValue<bool>())
+            {
+                sprite.Hide();
+            }
+            else
+            {
+                sprite.Show();
+                sprite.X = xpos + 20;
+                sprite.Y = ypos - 75;
+            }
 
             Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp ALPHA");
             Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Pet Name: " + Pet.PetName);
@@ -64,14 +92,20 @@ namespace PetSharp
             {
                 Drawing.DrawText(xpos, ypos + 100, System.Drawing.Color.LightSkyBlue, "Pet Health: Fine");
             }
-
-
         }
-
-        public void DrawRect(float x, float y, int width, int height, float thickness, System.Drawing.Color color)
+        
+        public static void DrawSprite()
         {
-            for (int i = 0; i < height; i++)
-                Drawing.DrawLine(x, y + i, x + width, y + i, thickness, color);
+            xpos = SharpMenu.Z.Item("xpos").GetValue<Slider>().Value;
+            ypos = SharpMenu.Z.Item("ypos").GetValue<Slider>().Value;
+                        
+            //Draw Sprites
+            //sprite = new Render.Sprite(petSprite, new Vector2(xpos + 20, ypos - 75));
+            sprite.Scale = new Vector2(0.12f, 0.12f);
+            sprite.Add();
+                
+                
+            
         }
 
         public static bool Bots()
@@ -79,8 +113,9 @@ namespace PetSharp
             var CountBots = 0;
             var bot = false;
             var isAram = Utility.Map.GetMap().Name;
+            Console.WriteLine(isAram);
 
-            if (HeroManager.AllHeroes.Count <= 2 || isAram.ToString() == "Howling Abyss")
+            if (HeroManager.AllHeroes.Count <= 0 || isAram.ToString() == "Howling Abyss")
             {
                 bot = true;
             }
@@ -88,7 +123,7 @@ namespace PetSharp
             {
                 foreach (var n in HeroManager.AllHeroes)
                 {
-                    if (n.Name.Contains(" Bot"))
+                    if (n.Name.Contains(" ssBot"))
                         CountBots++;
                 }
                 if (CountBots > 1)

@@ -24,6 +24,12 @@ namespace PetSharp
         public static bool Sick = false;
         public static bool FoodXP = false;
         public static int XPMulti = 1;
+        public static string mySprite;
+
+        //Sprite Vars
+        public static int minion_buffer_size = 60;
+        public static Render.Sprite[] sprites = new Render.Sprite[minion_buffer_size];
+        public Render.Sprite PetSprite;
 
         public Pet()
         {
@@ -33,7 +39,7 @@ namespace PetSharp
             Drawing.OnDraw += PetSharp.Drawing_OnDraw;
             Game.OnNotify += PetSharp.OnGameNotify;
         }
-
+                
         public static void OnUpdate(EventArgs args)
         {
             //Check if enabled
@@ -88,6 +94,5 @@ namespace PetSharp
             Save.FirstRun();
             Notifications.AddNotification("PetSharp: New Pet Created!", 30).SetTextColor(PetSharp.NotificationColor);
         }
-    }
-        
+    }   
 }

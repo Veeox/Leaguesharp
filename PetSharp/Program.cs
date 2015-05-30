@@ -24,7 +24,9 @@ namespace PetSharp
                 return;
             }
             else
+            {
                 new PetSharp();
+            }
         }
     }
 }
