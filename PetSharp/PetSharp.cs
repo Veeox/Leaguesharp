@@ -115,7 +115,7 @@ namespace PetSharp
             var isAram = Utility.Map.GetMap().Name;
             Console.WriteLine(isAram);
 
-            if (HeroManager.AllHeroes.Count <= 0 || isAram.ToString() == "Howling Abyss")
+            if (HeroManager.AllHeroes.Count <= 2 || isAram.ToString() == "Howling Abyss")
             {
                 bot = true;
             }
@@ -123,7 +123,7 @@ namespace PetSharp
             {
                 foreach (var n in HeroManager.AllHeroes)
                 {
-                    if (n.Name.Contains(" ssBot"))
+                    if (n.Name.Contains(" sssBot"))
                         CountBots++;
                 }
                 if (CountBots > 1)
@@ -145,6 +145,7 @@ namespace PetSharp
                 case GameEventId.OnChampionDoubleKill:
                     if (killer == Player.NetworkId)
                     {
+                        Console.WriteLine(killer);
                         Pet.CurXP += (Pet.MaxXP / 80) * Pet.XPMulti;
                         Pet.CashBalance += 10;
                     }
@@ -171,12 +172,14 @@ namespace PetSharp
                     }
                     break;
                 case GameEventId.OnAce:
+                    
                     var pl = FindPlayerByNetworkId(killer);
 
                     if (pl != null && pl.IsAlly)
                     {
                         Pet.CurXP += (Pet.MaxXP / 80) * Pet.XPMulti;
                         Pet.CashBalance += 15;
+                        Console.WriteLine("ACE");
                     }
                     break;
                 case GameEventId.OnChampionDie:
@@ -325,6 +328,7 @@ namespace PetSharp
         //End of game Save
         internal static void OnEnd(EventArgs args)
         {
+            sprite.Hide();
             Converters.ConvertInt(Pet.Lvl, Pet.CurXP, Pet.MaxXP, Pet.CashBalance);
         }
 
