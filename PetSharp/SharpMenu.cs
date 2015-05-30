@@ -28,6 +28,8 @@ namespace PetSharp
             Z.AddSubMenu(new Menu("Drawings", "draw"));
             Z.SubMenu("draw").AddItem(new MenuItem("drawstats", "Draw Stats").SetValue(true));
             Z.SubMenu("draw").AddItem(new MenuItem("drawsprites", "Draw Sprites").SetValue(true));
+            Z.SubMenu("draw").AddItem(new MenuItem("xpos", "Stats Pos X").SetValue(new Slider(1660, 0, 2500)));
+            Z.SubMenu("draw").AddItem(new MenuItem("ypos", "Stats Pos Y").SetValue(new Slider(640, 0, 2500)));
 
             //Misc menu
             Z.AddSubMenu(new Menu("Misc", "misc"));
@@ -42,6 +44,7 @@ namespace PetSharp
             Z.SubMenu("credits").AddItem(new MenuItem("zvodd", "zvodd"));
 
             Z.AddToMainMenu();
+
         }
     }
 }

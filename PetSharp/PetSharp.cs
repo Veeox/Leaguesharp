@@ -33,7 +33,7 @@ namespace PetSharp
         public PetSharp()
         {
             new Pet();
-            SharpMenu.Run();      
+            SharpMenu.Run();
 
             Notifications.AddNotification("PetSharp: Loaded!", 5).SetTextColor(NotificationColor);
         }
@@ -45,8 +45,8 @@ namespace PetSharp
                 return;
             }
 
-            var xpos = 1660;
-            var ypos = 640;
+            var xpos = SharpMenu.Z.Item("xpos").GetValue<Slider>().Value;
+            var ypos = SharpMenu.Z.Item("ypos").GetValue<Slider>().Value;
 
             Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp ALPHA");
             Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Pet Name: " + Pet.PetName);
@@ -78,7 +78,7 @@ namespace PetSharp
             {
                 foreach (var n in HeroManager.AllHeroes)
                 {
-                    if (n.Name.Contains(" Bot"))
+                    if (n.Name.Contains(" sBot"))
                         CountBots++;
                 }
                 if (CountBots > 1)
