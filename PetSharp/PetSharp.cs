@@ -78,9 +78,12 @@ namespace PetSharp
         {
             var CountBots = 0;
             var bot = false;
+            var isAram = Utility.Map.GetMap().Name;
 
-            if (HeroManager.AllHeroes.Count <= 2)
+            if (HeroManager.AllHeroes.Count <= 2 || isAram.ToString() == "Howling Abyss")
+            {
                 bot = true;
+            }
             else
             {
                 foreach (var n in HeroManager.AllHeroes)

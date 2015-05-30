@@ -20,7 +20,7 @@ namespace PetSharp
             var Bot = PetSharp.Bots();
             if (Bot)
             {
-                Notifications.AddNotification("PetSharp: Not Loaded With Bots!").SetTextColor(System.Drawing.Color.FromArgb(255, 0, 0));
+                Notifications.AddNotification("PetSharp: Disabled for ARAM & Bots!").SetTextColor(System.Drawing.Color.FromArgb(255, 0, 0));
                 return;
             }
             else
