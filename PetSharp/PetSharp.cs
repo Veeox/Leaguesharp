@@ -143,6 +143,7 @@ namespace PetSharp
             {
 
                 case GameEventId.OnChampionDoubleKill:
+
                     if (killer == Player.NetworkId)
                     {
                         Console.WriteLine(killer);
@@ -151,6 +152,7 @@ namespace PetSharp
                     }
                     break;
                 case GameEventId.OnChampionPentaKill:
+
                     if (killer == Player.NetworkId)
                     {
                         Pet.CurXP += (Pet.MaxXP / 15) * Pet.XPMulti;
@@ -158,6 +160,7 @@ namespace PetSharp
                     }
                     break;
                 case GameEventId.OnChampionQuadraKill:
+
                     if (killer == Player.NetworkId)
                     {
                         Pet.CurXP += (Pet.MaxXP / 45) * Pet.XPMulti;
@@ -165,6 +168,7 @@ namespace PetSharp
                     }
                     break;
                 case GameEventId.OnChampionTripleKill:
+
                     if (killer == Player.NetworkId)
                     {
                         Pet.CurXP += (Pet.MaxXP / 75) * Pet.XPMulti;
@@ -190,18 +194,8 @@ namespace PetSharp
                         Pet.CashBalance += 5;
                     }
                     break;
-
-                ////This is a test case - remove me when finished testing!
-                //case GameEventId.OnDie:
-                //    if (al != null && al.IsAlly)
-                //    {
-                //        Pet.CurXP += Pet.MaxXP / 75;
-                //        Console.WriteLine("this is a test");
-                //        Console.WriteLine(Pet.CurXP + "/" + Pet.MaxXP);
-                //    }
-                //    break;
-
                 case GameEventId.OnKillWard:
+
                     if (ObjectManager.Player.IsMe)
                     {
                         KillWard();
@@ -209,6 +203,7 @@ namespace PetSharp
                     }
                     break;
                 case GameEventId.OnChampionKillPost:
+
                     if (killer == Player.NetworkId && !Pet.Sick)
                     {
                         Console.WriteLine("Sick");
@@ -218,11 +213,6 @@ namespace PetSharp
                         }
                     }
                     break;
-
-
-                //case GameEventId.OnQuit:
-                //    ConvertInt(Lvl, CurXP, MaxXP, CashBalance);
-                //    break;
             }
         }
 
