@@ -79,7 +79,7 @@ namespace PetSharp
                 sprite.Y = ypos - 75;
             }
 
-            Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp ALPHA");
+            Drawing.DrawText(xpos, ypos, System.Drawing.Color.LightSkyBlue, "PetSharp BETA");
             Drawing.DrawText(xpos, ypos + 20, System.Drawing.Color.LightSkyBlue, "Pet Name: " + Pet.PetName);
             Drawing.DrawText(xpos, ypos + 40, System.Drawing.Color.LightSkyBlue, "Level: " + (int)Pet.Lvl);
             Drawing.DrawText(xpos, ypos + 60, System.Drawing.Color.LightSkyBlue, "XP: " + (int)Pet.CurXP + "/" + (int)Pet.MaxXP);
