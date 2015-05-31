@@ -253,8 +253,8 @@ namespace PetSharp
             if (allyBbuff != null && allyBbuff.Count > AllyB && !HasBaron)
             {
                 AllyD = allyBbuff.Count;
-                KillBaroon();
                 HasBaron = true;
+                KillBaroon();
             }
             // baroon expiry
             if (allyBbuff != null && allyBbuff.Count < AllyB)
