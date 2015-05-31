@@ -249,7 +249,7 @@ namespace PetSharp
             var allyBbuff = Player.Buffs.Find(x => x.Name == BaroonBuff);
 
             // ally kill baroon
-            if (allyBbuff != null && allyBbuff.Count > AllyB)
+            if (allyBbuff != null && allyBbuff.Count == 0)
             {
                 AllyD = allyBbuff.Count;
                 KillBaroon();
