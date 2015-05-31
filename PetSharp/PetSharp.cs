@@ -23,6 +23,12 @@ namespace PetSharp
         private static int AllyB;
         private static bool HasBaron = false;
         private static bool DoOnce = false;
+        public static float QuadraDelay;
+        public static float DoubleDelay;
+        public static float TrippleDelay;
+        public static float PentaDelay;
+        public static float AceDelay;
+        public static float WardDelay;
 
         public static Obj_AI_Hero Player { get { return ObjectManager.Player; } }
         
@@ -147,44 +153,65 @@ namespace PetSharp
 
                     if (killer == Player.NetworkId)
                     {
-                        Console.WriteLine(killer);
-                        Pet.CurXP += (Pet.MaxXP / 80) * Pet.XPMulti;
-                        Pet.CashBalance += 10;
+                        if (Game.Time > DoubleDelay)
+                        {
+                            Pet.CurXP += (Pet.MaxXP / 80) * Pet.XPMulti;
+                            Pet.CashBalance += 10;
+                            DoubleDelay = Game.Time + 3000;
+                        }
+                        
                     }
                     break;
                 case GameEventId.OnChampionPentaKill:
 
                     if (killer == Player.NetworkId)
                     {
-                        Pet.CurXP += (Pet.MaxXP / 15) * Pet.XPMulti;
-                        Pet.CashBalance += 75;
+                        if (Game.Time > PentaDelay)
+                        {
+                            Pet.CurXP += (Pet.MaxXP / 15) * Pet.XPMulti;
+                            Pet.CashBalance += 75;
+                            PentaDelay = Game.Time + 3000;
+                        }
+                        
                     }
                     break;
                 case GameEventId.OnChampionQuadraKill:
 
                     if (killer == Player.NetworkId)
                     {
-                        Pet.CurXP += (Pet.MaxXP / 45) * Pet.XPMulti;
-                        Pet.CashBalance += 50;
+                        if (Game.Time > QuadraDelay)
+                        {
+                            Pet.CurXP += (Pet.MaxXP / 45) * Pet.XPMulti;
+                            Pet.CashBalance += 50;
+                            QuadraDelay = Game.Time + 3000;
+                        }
+                        
                     }
                     break;
                 case GameEventId.OnChampionTripleKill:
 
                     if (killer == Player.NetworkId)
                     {
-                        Pet.CurXP += (Pet.MaxXP / 75) * Pet.XPMulti;
-                        Pet.CashBalance += 35;
+                        if (Game.Time > TrippleDelay)
+                        {
+                            Pet.CurXP += (Pet.MaxXP / 75) * Pet.XPMulti;
+                            Pet.CashBalance += 35;
+                            TrippleDelay = Game.Time + 3000;
+                        }
+                        
                     }
                     break;
                 case GameEventId.OnAce:
                     
                     var pl = FindPlayerByNetworkId(killer);
-
-                    if (pl != null && pl.IsAlly)
+                    if (Game.Time > AceDelay)
                     {
-                        Pet.CurXP += (Pet.MaxXP / 80) * Pet.XPMulti;
-                        Pet.CashBalance += 15;
-                        Console.WriteLine("ACE");
+                        if (pl != null && pl.IsAlly)
+                        {
+                            Pet.CurXP += (Pet.MaxXP / 80) * Pet.XPMulti;
+                            Pet.CashBalance += 15;
+                            AceDelay = Game.Time + 3000;
+                        }
                     }
                     break;
                 case GameEventId.OnChampionDie:
@@ -199,7 +226,12 @@ namespace PetSharp
 
                     if (ObjectManager.Player.IsMe)
                     {
-                        KillWard();
+                        if (Game.Time > WardDelay)
+                        {
+                            KillWard();
+                            WardDelay = Game.Time + 3000;
+                        }
+                        
                         Console.WriteLine("Killed a ward!");
                     }
                     break;
@@ -252,7 +284,7 @@ namespace PetSharp
             // ally kill baroon
             if (allyBbuff != null && allyBbuff.Count > AllyB && !HasBaron)
             {
-                AllyD = allyBbuff.Count;
+                AllyB = allyBbuff.Count;
                 HasBaron = true;
                 KillBaroon();
             }
@@ -263,7 +295,7 @@ namespace PetSharp
                 HasBaron = false;
             }
         }
-
+        
         public static void WinGame()
         {
             var nexus = ObjectManager.Get<Obj_HQ>().Find(n => n.Health < 1);
