@@ -21,6 +21,7 @@ namespace PetSharp
         private static string BaroonBuff = "exaltedwithbaronnashor";
         private static int AllyD;
         private static int AllyB;
+        private static bool HasBaron = false;
         private static bool DoOnce = false;
 
         public static Obj_AI_Hero Player { get { return ObjectManager.Player; } }
@@ -249,15 +250,17 @@ namespace PetSharp
             var allyBbuff = Player.Buffs.Find(x => x.Name == BaroonBuff);
 
             // ally kill baroon
-            if (allyBbuff != null && allyBbuff.Count == 0)
+            if (allyBbuff != null && allyBbuff.Count > AllyB && !HasBaron)
             {
                 AllyD = allyBbuff.Count;
                 KillBaroon();
+                HasBaron = true;
             }
             // baroon expiry
             if (allyBbuff != null && allyBbuff.Count < AllyB)
             {
                 AllyB = allyBbuff.Count;
+                HasBaron = false;
             }
         }
 
