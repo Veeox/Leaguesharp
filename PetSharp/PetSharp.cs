@@ -29,6 +29,7 @@ namespace PetSharp
         public static float PentaDelay;
         public static float AceDelay;
         public static float WardDelay;
+        public static float bDelay;
 
         public static Obj_AI_Hero Player { get { return ObjectManager.Player; } }
         
@@ -280,13 +281,16 @@ namespace PetSharp
         public static void BaroonCheck()
         {
             var allyBbuff = Player.Buffs.Find(x => x.Name == BaroonBuff);
-
-            // ally kill baroon
-            if (allyBbuff != null && allyBbuff.Count > AllyB && !HasBaron)
+            if (Game.Time > bDelay)
             {
-                AllyB = allyBbuff.Count;
-                HasBaron = true;
-                KillBaroon();
+                // ally kill baroon
+                if (allyBbuff != null && allyBbuff.Count > AllyB && !HasBaron)
+                {
+                    AllyB = allyBbuff.Count;
+                    HasBaron = true;
+                    KillBaroon();
+                    bDelay = Game.Time + 3000;
+                }
             }
             // baroon expiry
             if (allyBbuff != null && allyBbuff.Count < AllyB)
