@@ -99,6 +99,8 @@ namespace PetSharp
             Pet.CurXP = 0;
             Pet.MaxXP = 100;
             Pet.CashBalance = 0;
+            PetSharp.sprite.Dispose();
+            PetSharp.DrawSprite();
             RandomSprite();
             Converters.ConvertInt(Pet.Lvl, Pet.CurXP, Pet.MaxXP, Pet.CashBalance);
         }
@@ -121,7 +123,7 @@ namespace PetSharp
             string[] spriteDb1 = { "g4148", "g4174", "g4205", "g4238", "path4249" };
 
             Random randSprite = new Random();
-            string temp = "Resources.Resource1." + spriteDb1[randSprite.Next(0, spriteDb1.Length)];
+            string temp = spriteDb1[randSprite.Next(0, spriteDb1.Length)];
             Pet.mySprite = temp;
         }
 
