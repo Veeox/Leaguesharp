@@ -125,6 +125,7 @@ namespace PetSharp
             Random randSprite = new Random();
             string temp = spriteDb1[randSprite.Next(0, spriteDb1.Length)];
             Pet.mySprite = temp;
+            
         }
 
         public static void NewPet()

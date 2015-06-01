@@ -67,10 +67,6 @@ namespace PetSharp
                 if (SharpMenu.Z.Item("drawsprites").GetValue<bool>() && sprite != null)
                 {
                     Save.ReadSave();
-                    Console.WriteLine(Pet.mySprite);
-
-                    //sprite = new Render.Sprite(Resources.Resource1.g4205, new Vector2(xpos + 20, ypos - 75));
-                    Console.WriteLine(sprite);
                     DrawSprite();
                 }
                 else
@@ -208,6 +204,11 @@ namespace PetSharp
                     break;
                 case "path4249":
                     sprite = new Render.Sprite(Resources.Resource1.path4249, new Vector2(xpos + 20, ypos - 75));
+                    break;
+                default:
+                    sprite = new Render.Sprite(Resources.Resource1.g4205, new Vector2(xpos + 20, ypos - 75));
+                    Pet.mySprite = "g4205";
+                    Converters.ConvertInt(Pet.Lvl, Pet.CurXP, Pet.MaxXP, Pet.CashBalance);
                     break;
             }
         }
