@@ -220,7 +220,7 @@ namespace PetSharp
             var isAram = Utility.Map.GetMap().Name;
             Console.WriteLine(isAram);
 
-            if (HeroManager.AllHeroes.Count <= 0 || isAram.ToString() == "Howling Abyss")
+            if (HeroManager.AllHeroes.Count <= 2 || isAram.ToString() == "Howling Abyss")
             {
                 bot = true;
             }
@@ -228,7 +228,7 @@ namespace PetSharp
             {
                 foreach (var n in HeroManager.AllHeroes)
                 {
-                    if (n.Name.Contains(" ssBot"))
+                    if (n.Name.Contains(" Bot"))
                         CountBots++;
                 }
                 if (CountBots > 1)
